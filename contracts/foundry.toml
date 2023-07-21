@@ -9,3 +9,6 @@ libs = ['lib']
 
 [profile.intense.fuzz]
 runs = 10_000
+
+[rpc_endpoints]
+ethereum_mainnet = '${MAINNET_RPC_URL}'
