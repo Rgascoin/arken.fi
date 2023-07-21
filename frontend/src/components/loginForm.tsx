@@ -1,7 +1,10 @@
 /* eslint-disable @typescript-eslint/no-shadow */
 import AuthClient, { generateNonce } from '@walletconnect/auth-client';
 import { Web3Modal } from '@web3modal/standalone';
+import { router } from 'next/client';
 import React, { useCallback, useEffect, useState } from 'react';
+
+import { useUserContext } from '../contexts/userContext';
 
 // 1. Get projectID at https://cloud.walletconnect.com
 const projectId = process.env.NEXT_PUBLIC_PROJECT_ID;
@@ -16,6 +19,8 @@ const web3Modal = new Web3Modal({
 });
 
 const LoginForm = () => {
+	const userClient = useUserContext();
+
 	const [client, setClient] = useState<AuthClient | null>();
 	const [hasInitialized, setHasInitialized] = useState(false);
 	const [uri, setUri] = useState<string>('');
@@ -91,10 +96,18 @@ const LoginForm = () => {
 
 	// TODO: Trigger page redirection to main
 	useEffect(() => {
+		const trigger = async () => {
+			if (userClient?.login) await userClient.login(address);
+			router.push('/app/userDashboard');
+		};
+
 		if (address) {
 			web3Modal.closeModal();
+			trigger();
 		}
-	}, [address]);
+
+		console.log(userClient.address);
+	}, [address, userClient]);
 
 	return (
 		<>
@@ -148,7 +161,7 @@ const LoginForm = () => {
 				<div className="relative hidden w-0 flex-1 lg:block">
 					<img
 						className="absolute inset-0 h-full w-full object-cover"
-						src="https://images.unsplash.com/photo-1496917756835-20cb06e75b4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1908&q=80"
+						src="https://images.unsplash.com/photo-1631603090989-93f9ef6f9d80?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format"
 						alt="img"
 					/>
 				</div>
