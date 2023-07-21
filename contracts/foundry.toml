@@ -6,3 +6,6 @@ verbosity = 2
 src = 'src'
 out = 'out'
 libs = ['lib']
+
+[profile.intense.fuzz]
+runs = 10_000
