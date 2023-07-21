@@ -8,8 +8,9 @@ import {AOperator} from "./abstracts/AOperator.sol";
 import {AStrategy} from "./abstracts/AStrategy.sol";
 import {IStrategy} from "./interfaces/IStrategy.sol";
 import {SafeTransferLib} from "solmate/utils/SafeTransferLib.sol";
+import {AFees} from "./abstracts/AFees.sol";
 
-contract Vault is Owned, ERC4626, AStrategy, AOperator {
+contract Vault is Owned, ERC4626, AStrategy, AOperator, AFees {
     using SafeTransferLib for ERC20;
 
     event Compounded();
@@ -19,6 +20,8 @@ contract Vault is Owned, ERC4626, AStrategy, AOperator {
         address initialOwner,
         address initialStrategy,
         address initialOperator,
+        uint256 initialFee,
+        address initialFeeRecipient,
         address definitiveAsset,
         string memory definitiveName,
         string memory definitiveSymbol
@@ -27,6 +30,7 @@ contract Vault is Owned, ERC4626, AStrategy, AOperator {
         ERC4626(ERC20(definitiveAsset), definitiveName, definitiveSymbol)
         AStrategy(initialStrategy)
         AOperator(initialOperator)
+        AFees(initialFee, initialFeeRecipient)
     {}
 
     function totalAssets() public view override returns (uint256) {
@@ -37,6 +41,12 @@ contract Vault is Owned, ERC4626, AStrategy, AOperator {
         emit Harvested();
 
         IStrategy(strategy).harvest();
+
+        // Collect the admin fee
+        uint256 balance = ERC20(asset).balanceOf(address(this));
+        uint256 fee = balance * harvestFee / MAX_BPS;
+
+        ERC20(asset).safeTransfer(feeRecipient, fee);
     }
 
     function compound() external onlyOperatorOrOwner {

@@ -20,9 +20,9 @@ contract ApeCoinTest is MainnetTest, FactoryTest {
 
         vm.startPrank(owner);
 
-        strategy = new ApeCoinStrategy(owner, 500, owner, address(apeStaker), address(apeCoin));
+        strategy = new ApeCoinStrategy(owner, address(apeStaker), address(apeCoin));
 
-        vault = Vault(factory.createVault(owner, address(strategy), operator, address(apeCoin), "wstkAPE Token", "wstkAPE"));
+        vault = Vault(factory.createVault(owner, address(strategy), operator, 500, owner, address(apeCoin), "wstkAPE Token", "wstkAPE"));
 
         strategy.setVault(address(vault));
         vm.stopPrank();

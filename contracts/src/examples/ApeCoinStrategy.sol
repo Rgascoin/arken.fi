@@ -4,7 +4,6 @@ pragma solidity 0.8.20;
 import {IStrategy} from "../interfaces/IStrategy.sol";
 import {ERC20} from "solmate/tokens/ERC20.sol";
 import {SafeTransferLib} from "solmate/utils/SafeTransferLib.sol";
-import {AFees} from "../abstracts/AFees.sol";
 import {Owned} from "solmate/auth/Owned.sol";
 import {Errors} from "../utils/Errors.sol";
 
@@ -29,7 +28,7 @@ interface ApeStaking {
     }
 }
 
-contract ApeCoinStrategy is IStrategy, Owned, AFees {
+contract ApeCoinStrategy is IStrategy, Owned {
     using SafeTransferLib for ERC20;
 
     event OwnerUpdated(address oldOwner, address newOwner);
@@ -40,11 +39,9 @@ contract ApeCoinStrategy is IStrategy, Owned, AFees {
 
     constructor(
         address initialOwner,
-        uint256 initialHarvestFee,
-        address initialFeeRecipient,
         address definitiveStaker,
         address definitiveAsset
-    ) AFees(initialHarvestFee, initialFeeRecipient) Owned(initialOwner) {
+    ) Owned(initialOwner) {
         staker = definitiveStaker;
         asset = definitiveAsset;
 
@@ -72,12 +69,6 @@ contract ApeCoinStrategy is IStrategy, Owned, AFees {
 
     function harvest() external override {
         ApeStaking(staker).claimSelfApeCoin();
-
-        // Collect the admin fee
-        uint256 balance = ERC20(asset).balanceOf(address(this));
-        uint256 fee = balance * harvestFee / MAX_BPS;
-
-        ERC20(asset).safeTransfer(feeRecipient, fee);
     }
 
     function compound() external override {
