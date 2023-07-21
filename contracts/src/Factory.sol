@@ -5,18 +5,14 @@ import {Owned} from "solmate/auth/Owned.sol";
 import {Vault} from "./Vault.sol";
 
 contract Factory is Owned {
-
     event VaultCreated(address indexed owner, address indexed asset, address vault);
 
-    mapping(address => mapping(address => address[])) public vaults;
+    mapping(address admin => mapping(address token => address[] vaults)) public vaults;
 
     constructor(address initialOwner) Owned(initialOwner) {}
 
     function createVault(
         address owner,
-        uint256 harvestFee,
-        address feeRecipient,
-        address feeToken,
         address strategy,
         address operator,
         address asset,
@@ -26,9 +22,6 @@ contract Factory is Owned {
         address vault = address(
             new Vault(
             owner,
-            harvestFee,
-            feeRecipient,
-            feeToken,
             strategy,
             operator,
             asset,
