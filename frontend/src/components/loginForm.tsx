@@ -47,12 +47,11 @@ const LoginForm = () => {
 		const web3Provider = new ethers.BrowserProvider(provider);
 		const signer = await web3Provider.getSigner();
 		const address = await signer.getAddress();
-		console.log(address);
 
 		await userClient.setProvider(web3Provider);
 		await userClient.setAddress(address);
 
-		router.push('/app/userDashboard')
+		await router.push('/app/userDashboard')
 	};
 
 	return (
