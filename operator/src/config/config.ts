@@ -9,6 +9,10 @@ class Config {
     return this.getEnv("JSON_RPC_URL", required);
   }
 
+  static port(required = true): string {
+    return this.getEnv("PORT", required);
+  }
+
   static mnemonics(required = true): string {
     return this.getEnv("MNEMONICS", required);
   }
