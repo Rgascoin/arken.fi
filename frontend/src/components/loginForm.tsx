@@ -1,12 +1,34 @@
 /* eslint-disable @typescript-eslint/no-shadow */
+import Web3Modal from 'web3modal';
 
 import { useSignIn } from '@walletconnect/modal-auth-react';
-import { JsonRpcProvider, JsonRpcSigner } from 'ethers';
 import { useRouter } from 'next/router';
 import * as process from 'process';
-import React from 'react';
+import React, {useEffect} from 'react';
 
 import { useUserContext } from '../contexts/userContext';
+import {ethers} from "ethers";
+import WalletConnectProvider from "@walletconnect/web3-provider";
+
+const providerOptions = {
+	walletconnect: {
+		package: WalletConnectProvider,
+		options: {
+			appName: 'akren.fi',
+			infuraId: process.env.NEXT_PUBLIC_INFURA_ID,
+			darkMode: true,
+		},
+	},
+};
+
+let web3Modal: Web3Modal | null;
+if (typeof window !== 'undefined') {
+	web3Modal = new Web3Modal({
+		network: 'mainnet', // optional
+		cacheProvider: true,
+		providerOptions, // required
+	});
+}
 
 const LoginForm = () => {
 	const router = useRouter();
@@ -17,21 +39,20 @@ const LoginForm = () => {
 	});
 
 	const onSignIn = async () => {
-		if (!userClient.setProvider || !userClient.setAddress) return;
-		const data = await signIn();
-		console.log(data);
-
-		if (!error) {
-			const provider = new JsonRpcProvider(
-				`https://rpc.walletconnect.com/v1/?chainId=eip155:1&projectId=${process.env.NEXT_PUBLIC_PROJECT_ID}`,
-			);
-
-			// const signer = new JsonRpcSigner(provider, data.address);
-
-			await userClient.setProvider(provider);
-			await userClient.setAddress(data.address);
-			await router.push('/app/userDashboard');
+		if (!web3Modal || !userClient.setProvider || !userClient.setAddress) {
+			console.error('cant init login')
+			return;
 		}
+		const provider = await web3Modal.connect();
+		const web3Provider = new ethers.BrowserProvider(provider);
+		const signer = await web3Provider.getSigner();
+		const address = await signer.getAddress();
+		console.log(address);
+
+		await userClient.setProvider(web3Provider);
+		await userClient.setAddress(address);
+
+		router.push('/app/userDashboard')
 	};
 
 	return (
