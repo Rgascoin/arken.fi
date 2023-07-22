@@ -13,7 +13,7 @@ contract MockVaultScript is Script {
 
     function setUp() public {
         factory = Factory(vm.envAddress("FACTORY_ADDRESS"));
-        operator = 0x0Fe0698eD8B2a8Fd04aF7FE9C6A06726E7746528;
+        operator = makeAddr("operator");
     }
 
     function run() public {

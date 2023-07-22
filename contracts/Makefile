@@ -1,5 +1,9 @@
 SHELL:=/bin/bash
 
+deployGoerli:
+	source .env; \
+	forge script script/Deploy.s.sol:DeployScript --rpc-url $${GOERLI_RPC_URL} --broadcast
+
 deployMantle:
 	source .env; \
 	forge script script/Deploy.s.sol:DeployScript --rpc-url $${MANTLE_RPC_URL} --broadcast --legacy
