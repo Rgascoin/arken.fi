@@ -22,9 +22,7 @@ contract Constructor is ApeCoinTest {
 
     function test_constructor_ZeroAddressStrategy() public {
         vm.expectRevert();
-        factory.createVault(
-            owner, zero, operator, 500, owner, 1 weeks, address(apeCoin), "wstkAPE Token", "wstkAPE"
-        );
+        factory.createVault(owner, zero, operator, 500, owner, 1 weeks, address(apeCoin), "wstkAPE Token", "wstkAPE");
     }
 
     function test_constructor_ZeroAddressOperator() public {
@@ -43,8 +41,6 @@ contract Constructor is ApeCoinTest {
 
     function test_constructor_ZeroAddressAsset() public {
         vm.expectRevert();
-        factory.createVault(
-            owner, address(strategy), operator, 500, owner, 1 weeks, zero, "wstkAPE Token", "wstkAPE"
-        );
+        factory.createVault(owner, address(strategy), operator, 500, owner, 1 weeks, zero, "wstkAPE Token", "wstkAPE");
     }
 }

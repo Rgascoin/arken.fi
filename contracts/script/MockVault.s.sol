@@ -31,15 +31,7 @@ contract MockVaultScript is Script {
 
         Vault vault = Vault(
             factory.createVault(
-                deployer,
-                address(strategy),
-                operator,
-                500,
-                deployer,
-                1 minutes,
-                address(token),
-                "Mock Token",
-                "wMOCK"
+                deployer, address(strategy), operator, 500, deployer, 1 minutes, address(token), "Mock Token", "wMOCK"
             )
         );
         console.log("Vault deployed at: %s", address(vault));

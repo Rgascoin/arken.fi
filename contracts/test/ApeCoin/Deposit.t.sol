@@ -22,7 +22,7 @@ contract DepositTest is ApeCoinTest {
     }
 
     function test_Deposit_BellowMin(uint256 amount) public {
-         amount = bound(amount, 0, 1e18 - 1);
+        amount = bound(amount, 0, 1e18 - 1);
 
         vm.startPrank(alice);
 
