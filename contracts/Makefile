@@ -7,11 +7,23 @@ deployMantle:
 # TODO the deployment doesn't works yet
 deployNeon:
 	source .env; \
-	forge script script/Deploy.s.sol:DeployScript --rpc-url $${NEON_RPC_URL} --broadcast --legacy
+	forge script script/Deploy.s.sol:DeployScript --gas-limit 100000000000 --rpc-url $${NEON_RPC_URL} --broadcast --legacy
 
 deployGnosis:
 	source .env; \
 	forge script script/Deploy.s.sol:DeployScript --rpc-url $${GNOSIS_RPC_URL} --broadcast 
+
+createVault:
+	source .env; \
+	forge script script/DeployVault.s.sol:DeployVaultScript --broadcast --rpc-url http://localhost:8545
+
+deployLocal:
+	source .env; \
+	forge script script/Deploy.s.sol:DeployScript --broadcast --rpc-url http://localhost:8545
+
+local:
+	source .env; \
+	anvil --fork-url $${MAINNET_RPC_URL}
 
 compile:
 	forge compile
