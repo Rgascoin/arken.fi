@@ -16,9 +16,9 @@ const deployments = [
 		data: '123.00 ETH',
 		dataColor: 'text-indigo-400 bg-indigo-400/10 ring-indigo-400/30',
 		stats: [
-			{ name: 'Vault Balance', value: '23,533.00', unit: 'eth' },
-			{ name: 'User Balance', value: '123.00', unit: 'eth' },
-			{ name: 'Re-stake', value: '5.00', unit: 'eth' },
+			{ name: 'Vault Balance', value: '23,533.00', unit: 'ape' },
+			{ name: 'User Balance', value: '123.00', unit: 'ape' },
+			{ name: 'Re-stake', value: '5.00', unit: 'ape' },
 		],
 	},
 ];

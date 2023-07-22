@@ -52,10 +52,14 @@ const MainPanel = () => {
 				const vaultContract = getContract(vaultAddress, vaultAbi, signer);
 				if (!vaultContract) return;
 				const totalAsset = await vaultContract.totalAssets();
+				const operator = await vaultContract.operator();
+				const gas = await userClient.provider?.getBalance(operator);
 
 				stakedVaults.push({
 					id: index,
 					vaultAddress,
+					operator,
+					gas: (gas as bigint).toString(),
 					color: 'text-green-400 bg-green-400/10',
 					description: 'Happy staking.',
 					data: `${ethers.formatEther(totalAsset)} Ape`,

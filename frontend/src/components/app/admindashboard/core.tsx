@@ -16,9 +16,15 @@ import VaultList from './vaultList';
 const FactoryContractAddress = '0x9155497EAE31D432C0b13dBCc0615a37f55a2c87';
 
 type ModalFormData = {
-	vault: string;
-	receiver: string;
-	amount: number;
+	owner: string;
+	strategy: string;
+	operator: string;
+	fee: bigint;
+	feeRecipient: string;
+	interval: bigint;
+	asset: string;
+	name: string;
+	symbol: string;
 };
 
 const Core = () => {
@@ -26,9 +32,15 @@ const Core = () => {
 	const router = useRouter();
 	const { focus } = router.query;
 	const [modalFormData, setModalFormData] = useState<ModalFormData>({
-		vault: '',
-		receiver: '',
-		amount: 0,
+		owner: '',
+		strategy: '',
+		operator: '',
+		fee: 0n,
+		feeRecipient: '',
+		interval: 0n,
+		asset: '',
+		name: '',
+		symbol: '',
 	});
 	const [vaultsAddresses, setVaultsAddresses] = useState<string[] | undefined>(undefined);
 
@@ -46,65 +58,50 @@ const Core = () => {
 		}
 
 		const signer = new JsonRpcSigner(userClient.provider as unknown as JsonRpcApiProvider, userClient.address);
-		console.log(modalFormData.vault);
-		const vaultContract = getContract(modalFormData.vault, vaultAbi, signer);
+		const vaultContract = getContract(FactoryContractAddress, factoryAbi, signer);
 		if (!vaultContract) {
 			console.log("Can't fetch the vault contract");
 			return;
 		}
 
-		const assetAddress = await vaultContract.asset();
-		const assetContract = getContract(assetAddress, ierc20, signer);
-		if (!assetContract) {
-			console.log("Can't fetch the erc20 contract");
-			return;
-		}
-
-		const rxc = await assetContract.approve(modalFormData.vault, modalFormData.amount);
-		await rxc.wait();
-
-		const strat = await vaultContract.strategy();
-		console.log('start:', strat);
-
-		console.log(modalFormData.amount, modalFormData.receiver);
-		await vaultContract.deposit(modalFormData.amount.toString(), modalFormData.receiver, { gasLimit: 1000000 });
-
-		setModalFormData({
-			vault: '',
-			receiver: '',
-			amount: 0,
-		});
-	};
-
-	// TODO: Cut duplicate
-	const fetchVaultList = async (): Promise<string[] | Promise<undefined>> => {
-		if (!userClient.provider || !userClient.address) {
-			console.error("Can't get signer");
-			return;
-		}
-
-		const signer = new JsonRpcSigner(userClient.provider as unknown as JsonRpcApiProvider, userClient.address);
-		const contract = getContract(FactoryContractAddress, factoryAbi, signer);
-		if (!contract) {
-			console.log("Can't fetch the contract");
-			return;
-		}
-
-		// Fetching data until the array is empty
-		const addresses = await contract.getVaults();
-		return addresses;
+		const assetAddress = await vaultContract.createVault(
+			modalFormData.owner,
+			modalFormData.strategy,
+			modalFormData.operator,
+			modalFormData.fee,
+			modalFormData.feeRecipient,
+			modalFormData.interval,
+			modalFormData.asset,
+			modalFormData.name,
+			modalFormData.symbol,
+		);
+		await assetAddress.wait();
 	};
 
 	useEffect(() => {
-		const fetch = async () => {
-			const list = await fetchVaultList();
-			setVaultsAddresses(list);
-			if (list) setModalFormData({ ...modalFormData, vault: list[0], receiver: userClient.address as string });
+		const fetchData = async () => {
+			try {
+				const response = await fetch('http://localhost:3001/');
+
+				setModalFormData({
+					owner: userClient.address as string,
+					strategy: '',
+					operator: await response.text(),
+					fee: 500n,
+					feeRecipient: userClient.address as string,
+					interval: 604800n,
+					asset: '0x4d224452801ACEd8B2F0aebE155379bb5D594381',
+					name: 'First Vault',
+					symbol: 'FVLT',
+				});
+			} catch (e: any) {
+				console.log(e);
+			}
 		};
 
 		if (userClient.setPickedDeposit) userClient.setPickedDeposit(undefined);
 
-		if (userClient.provider && userClient.address) fetch();
+		if (userClient.provider && userClient.address) fetchData();
 	}, [userClient.provider]);
 
 	return (
@@ -233,11 +230,11 @@ const Core = () => {
 													as="h3"
 													className="text-base font-semibold leading-6 text-gray-100"
 												>
-													Stake on Vault
+													Create a Vault
 												</Dialog.Title>
 												<div className="mt-1">
 													<p className="text-sm text-gray-300">
-														Pick a Vault and Chose an amount to stake.
+														Provide some information to create your vault.
 													</p>
 												</div>
 											</div>
@@ -245,58 +242,162 @@ const Core = () => {
 										<div className={'my-6'}>
 											<div>
 												<label
-													htmlFor="vault"
-													className="block text-sm font-medium leading-6 text-gray-200"
-												>
-													Vault
-												</label>
-												<select
-													id="vault"
-													name="vault"
-													value={modalFormData.vault}
-													onChange={onChange}
-													className="mt-2 block w-full rounded-md border-0 bg-gray-600 py-1.5 pl-3 pr-10 text-gray-300 ring-1 ring-inset ring-gray-800 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6"
-												>
-													{vaultsAddresses &&
-														vaultsAddresses.map((address, index) => (
-															<option key={address}>{address}</option>
-														))}
-												</select>
-											</div>
-											<div className={'mt-2'}>
-												<label
 													htmlFor="amount"
 													className="block text-sm font-medium leading-6 text-gray-200"
 												>
-													Receiver
+													Owner
 												</label>
 												<div className="">
 													<input
 														type="text"
-														name="receiver"
-														value={modalFormData.receiver}
+														name="owner"
+														value={modalFormData.owner}
 														onChange={onChange}
 														className="block w-full rounded-md border-0 bg-gray-600 px-3 py-1.5 text-gray-300 shadow-sm ring-1 ring-inset ring-gray-700 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-														placeholder="0.00"
 														aria-describedby="form text input"
 													/>
 												</div>
 											</div>
 											<div className={'mt-2'}>
 												<label
-													htmlFor="amount"
+													htmlFor="strategy"
 													className="block text-sm font-medium leading-6 text-gray-200"
 												>
-													Amount
+													strategy
+												</label>
+												<div className="">
+													<input
+														type="text"
+														name="strategy"
+														value={modalFormData.strategy}
+														onChange={onChange}
+														className="block w-full rounded-md border-0 bg-gray-600 px-3 py-1.5 text-gray-300 shadow-sm ring-1 ring-inset ring-gray-700 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+														aria-describedby="form text input"
+													/>
+												</div>
+											</div>
+											<div className={'mt-2'}>
+												<label
+													htmlFor="operator"
+													className="block text-sm font-medium leading-6 text-gray-200"
+												>
+													operator
+												</label>
+												<div className="">
+													<input
+														type="text"
+														name="operator"
+														value={modalFormData.operator}
+														onChange={onChange}
+														className="block w-full rounded-md border-0 bg-gray-600 px-3 py-1.5 text-gray-300 shadow-sm ring-1 ring-inset ring-gray-700 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+														aria-describedby="form text input"
+													/>
+												</div>
+											</div>
+											<div className={'mt-2'}>
+												<label
+													htmlFor="fee"
+													className="block text-sm font-medium leading-6 text-gray-200"
+												>
+													fee
 												</label>
 												<div className="">
 													<input
 														type="number"
-														name="amount"
-														value={modalFormData.amount}
+														name="fee"
+														value={modalFormData.fee.toString()}
 														onChange={onChange}
 														className="block w-full rounded-md border-0 bg-gray-600 px-3 py-1.5 text-gray-300 shadow-sm ring-1 ring-inset ring-gray-700 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-														placeholder="0.00"
+														aria-describedby="form text input"
+													/>
+												</div>
+											</div>
+											<div className={'mt-2'}>
+												<label
+													htmlFor="feeRecipient"
+													className="block text-sm font-medium leading-6 text-gray-200"
+												>
+													feeRecipient
+												</label>
+												<div className="">
+													<input
+														type="text"
+														name="feeRecipient"
+														value={modalFormData.feeRecipient}
+														onChange={onChange}
+														className="block w-full rounded-md border-0 bg-gray-600 px-3 py-1.5 text-gray-300 shadow-sm ring-1 ring-inset ring-gray-700 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+														aria-describedby="form text input"
+													/>
+												</div>
+											</div>
+											<div className={'mt-2'}>
+												<label
+													htmlFor="feeRecipient"
+													className="block text-sm font-medium leading-6 text-gray-200"
+												>
+													interval
+												</label>
+												<div className="">
+													<input
+														type="number"
+														name="interval"
+														value={modalFormData.interval.toString()}
+														onChange={onChange}
+														className="block w-full rounded-md border-0 bg-gray-600 px-3 py-1.5 text-gray-300 shadow-sm ring-1 ring-inset ring-gray-700 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+														aria-describedby="form text input"
+													/>
+												</div>
+											</div>
+											<div className={'mt-2'}>
+												<label
+													htmlFor="feeRecipient"
+													className="block text-sm font-medium leading-6 text-gray-200"
+												>
+													asset
+												</label>
+												<div className="">
+													<input
+														type="text"
+														name="asset"
+														value={modalFormData.asset}
+														onChange={onChange}
+														className="block w-full rounded-md border-0 bg-gray-600 px-3 py-1.5 text-gray-300 shadow-sm ring-1 ring-inset ring-gray-700 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+														aria-describedby="form text input"
+													/>
+												</div>
+											</div>
+											<div className={'mt-2'}>
+												<label
+													htmlFor="feeRecipient"
+													className="block text-sm font-medium leading-6 text-gray-200"
+												>
+													name
+												</label>
+												<div className="">
+													<input
+														type="text"
+														name="name"
+														value={modalFormData.name}
+														onChange={onChange}
+														className="block w-full rounded-md border-0 bg-gray-600 px-3 py-1.5 text-gray-300 shadow-sm ring-1 ring-inset ring-gray-700 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+														aria-describedby="form text input"
+													/>
+												</div>
+											</div>
+											<div className={'mt-2'}>
+												<label
+													htmlFor="symbol"
+													className="block text-sm font-medium leading-6 text-gray-200"
+												>
+													symbol
+												</label>
+												<div className="">
+													<input
+														type="text"
+														name="symbol"
+														value={modalFormData.symbol}
+														onChange={onChange}
+														className="block w-full rounded-md border-0 bg-gray-600 px-3 py-1.5 text-gray-300 shadow-sm ring-1 ring-inset ring-gray-700 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
 														aria-describedby="form text input"
 													/>
 												</div>
@@ -311,7 +412,7 @@ const Core = () => {
 												await requestStaking();
 											}}
 										>
-											Stake!
+											Create!
 										</button>
 										<button
 											type="button"

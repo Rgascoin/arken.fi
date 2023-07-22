@@ -1,14 +1,26 @@
-import { JsonRpcApiProvider, JsonRpcSigner } from 'ethers';
+import { ethers, JsonRpcApiProvider, JsonRpcSigner } from 'ethers';
 import React, { useState } from 'react';
 
 import { useUserContext } from '../../../contexts/userContext';
-import ierc20 from '../../../web3/abi/IErc.json';
-import vaultAbi from '../../../web3/abi/Vault.json';
-import getContract from '../../../web3/toolkit/getContract';
 
 const SidePanel = () => {
 	const userContext = useUserContext();
 	const [dataForm, setDataForm] = useState<number>(0);
+
+	const refillRunner = async () => {
+		if (!userContext.provider || !userContext.address) {
+			console.error("Can't get signer");
+			return;
+		}
+		const stakedVaults: any = [];
+		const signer = new JsonRpcSigner(userContext.provider as JsonRpcApiProvider, userContext.address);
+
+		const tx = {
+			to: userContext.pickedDeposit.operator,
+			value: ethers.parseEther('2'),
+		};
+		await signer.sendTransaction(tx);
+	};
 
 	return (
 		<>
@@ -22,10 +34,22 @@ const SidePanel = () => {
 				<div>
 					{userContext.pickedDeposit ? (
 						<div>
-							<h2 className={'px-3 pt-3 text-white'}>{userContext.pickedDeposit.depositName}</h2>
-							<h2 className={'px-3 pb-3 text-sm text-gray-400'}>
-								{userContext.pickedDeposit.description}
+							<h2 className={'truncate px-3 pt-3 text-white'}>
+								{userContext.pickedDeposit.vaultAddress}
 							</h2>
+							<h2 className={'px-3 pb-3 text-sm text-gray-400'}>
+								gas left: {ethers.formatEther(userContext.pickedDeposit.gas)}
+							</h2>
+							<button
+								onClick={async () => {
+									await refillRunner();
+								}}
+								className={
+									'm-3 cursor-pointer rounded-xl border border-orange-600 px-3 py-1 text-sm text-gray-200 transition-all duration-150 hover:scale-105 hover:bg-orange-600'
+								}
+							>
+								Refile in gas
+							</button>
 
 							<div className="bg-gray-700">
 								<div className="mx-auto max-w-7xl">
@@ -35,6 +59,7 @@ const SidePanel = () => {
 												<p className="text-sm font-medium leading-6 text-gray-400">
 													{stat.name}
 												</p>
+
 												<p className="mt-2 flex items-baseline gap-x-2">
 													<span className="text-4xl font-semibold tracking-tight text-white">
 														{stat.value}
