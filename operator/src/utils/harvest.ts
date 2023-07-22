@@ -4,22 +4,20 @@ import provider from "../config/etherProvider";
 import fs from "fs";
 import Config from "../config/config";
 
-const harvest = async (
-  vaultAddress: string,
-) => {
-  const mnemonic = Config.mnemonics();
-  const vault = new Contract(vaultAddress, vaultAbi, provider);
-  const operator = await vault.operator();
-
-  const content = fs.readFileSync('data/wallets.json', 'utf8');
-  const wallets = JSON.parse(content);
-
-  const path = wallets[operator];
-  const wallet = Wallet.fromMnemonic(mnemonic, path.path).connect(provider);
-
-  vault.connect(wallet);
-
+const harvest = async (vaultAddress: string) => {
   try {
+    const mnemonic = Config.mnemonics();
+    const vault = new Contract(vaultAddress, vaultAbi, provider);
+    const operator = await vault.operator();
+
+    const content = fs.readFileSync("data/wallets.json", "utf8");
+    const wallets = JSON.parse(content);
+
+    const path = wallets[operator];
+    const wallet = Wallet.fromMnemonic(mnemonic, path.path).connect(provider);
+
+    vault.connect(wallet);
+
     // Harvest the rewards
     const tx = await vault.harvest();
 

@@ -23,6 +23,5 @@ contract HarvestTest is ApeCoinTest {
         vault.harvest();
 
         assertEq(apeStaker.getApeCoinStake(address(strategy)).unclaimed, 0);
-
     }
 }

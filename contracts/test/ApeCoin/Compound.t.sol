@@ -24,6 +24,5 @@ contract CompoundTest is ApeCoinTest {
         vault.compound();
 
         assertEq(apeStaker.getApeCoinStake(address(strategy)).deposited, amount + topUpAmount);
-
     }
 }

@@ -37,11 +37,7 @@ contract ApeCoinStrategy is IStrategy, Owned {
     address public asset;
     address public vault;
 
-    constructor(
-        address initialOwner,
-        address definitiveStaker,
-        address definitiveAsset
-    ) Owned(initialOwner) {
+    constructor(address initialOwner, address definitiveStaker, address definitiveAsset) Owned(initialOwner) {
         staker = definitiveStaker;
         asset = definitiveAsset;
 
