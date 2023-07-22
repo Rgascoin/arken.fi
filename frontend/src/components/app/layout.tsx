@@ -1,8 +1,9 @@
 import { Dialog, Transition } from '@headlessui/react';
 import { Bars3Icon, LockClosedIcon } from '@heroicons/react/20/solid';
 import { XMarkIcon } from '@heroicons/react/24/outline';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
-import {Fragment, useEffect, useState} from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 
 import { useUserContext } from '../../contexts/userContext';
 
@@ -86,21 +87,22 @@ const Layout = ({ navigation, children }: IProps) => {
 													<ul role="list" className="-mx-2 space-y-1">
 														{navigation.map((item, index: number) => (
 															<li key={index}>
-																<a
-																	href={item.href}
-																	className={classNames(
-																		item.current
-																			? 'bg-gray-800 text-white'
-																			: 'text-gray-400 hover:text-white hover:bg-gray-800',
-																		'group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold',
-																	)}
-																>
-																	<item.icon
-																		className="h-6 w-6 shrink-0"
-																		aria-hidden="true"
-																	/>
-																	{item.name}
-																</a>
+																<Link href={item.href}>
+																	<div
+																		className={classNames(
+																			item.current
+																				? 'bg-gray-800 text-white'
+																				: 'text-gray-400 hover:text-white hover:bg-gray-800',
+																			'group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold',
+																		)}
+																	>
+																		<item.icon
+																			className="h-6 w-6 shrink-0"
+																			aria-hidden="true"
+																		/>
+																		{item.name}
+																	</div>
+																</Link>
 															</li>
 														))}
 													</ul>
@@ -131,18 +133,19 @@ const Layout = ({ navigation, children }: IProps) => {
 									<ul role="list" className="-mx-2 space-y-1">
 										{navigation.map((item, index: number) => (
 											<li key={index}>
-												<a
-													href={item.href}
-													className={classNames(
-														item.current
-															? 'bg-gray-800 text-white'
-															: 'text-gray-400 hover:text-white hover:bg-gray-800',
-														'group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold',
-													)}
-												>
-													<item.icon className="h-6 w-6 shrink-0" aria-hidden="true" />
-													{item.name}
-												</a>
+												<Link href={item.href}>
+													<div
+														className={classNames(
+															item.current
+																? 'bg-gray-800 text-white'
+																: 'text-gray-400 hover:text-white hover:bg-gray-800',
+															'group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold',
+														)}
+													>
+														<item.icon className="h-6 w-6 shrink-0" aria-hidden="true" />
+														{item.name}
+													</div>
+												</Link>
 											</li>
 										))}
 									</ul>

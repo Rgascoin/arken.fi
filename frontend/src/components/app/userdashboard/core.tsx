@@ -1,21 +1,19 @@
 import { Dialog, Transition } from '@headlessui/react';
 import { CurrencyDollarIcon } from '@heroicons/react/24/outline';
+import { JsonRpcApiProvider, JsonRpcSigner } from 'ethers';
 import { useRouter } from 'next/router';
 import React, { Fragment, useEffect, useRef, useState } from 'react';
 
+import { useUserContext } from '../../../contexts/userContext';
+import factoryAbi from '../../../web3/abi/Factory.json';
+import ierc20 from '../../../web3/abi/IErc.json';
+import vaultAbi from '../../../web3/abi/Vault.json';
+import getContract from '../../../web3/toolkit/getContract';
 import MainPanel from './mainPanel';
 import SidePanel from './sidePanel';
 import VaultList from './vaultList';
-import getContract from "../../../web3/toolkit/getContract";
-import factoryAbi from "../../../web3/abi/Factory.json";
-import vaultAbi from '../../../web3/abi/Vault.json';
-import ierc20 from '../../../web3/abi/IErc.json';
-
-import {useUserContext} from "../../../contexts/userContext";
-import {JsonRpcApiProvider, JsonRpcSigner} from "ethers";
 
 const FactoryContractAddress = '0x9155497EAE31D432C0b13dBCc0615a37f55a2c87';
-
 
 type ModalFormData = {
 	vault: string;
@@ -32,7 +30,7 @@ const Core = () => {
 		receiver: '',
 		amount: 0,
 	});
-	const [vaultsAddresses, setVaultsAddresses] = useState<string[] | undefined>(undefined)
+	const [vaultsAddresses, setVaultsAddresses] = useState<string[] | undefined>(undefined);
 
 	const [open, setOpen] = useState(false);
 	const cancelButtonRef = useRef(null);
@@ -43,33 +41,33 @@ const Core = () => {
 
 	const requestStaking = async () => {
 		if (!userClient.provider || !userClient.address) {
-			console.error("Can't get signer")
+			console.error("Can't get signer");
 			return;
 		}
 
-		const signer = new JsonRpcSigner(userClient.provider as unknown as JsonRpcApiProvider, userClient.address)
-		console.log(modalFormData.vault)
+		const signer = new JsonRpcSigner(userClient.provider as unknown as JsonRpcApiProvider, userClient.address);
+		console.log(modalFormData.vault);
 		const vaultContract = getContract(modalFormData.vault, vaultAbi, signer);
 		if (!vaultContract) {
-			console.log("Can't fetch the vault contract")
+			console.log("Can't fetch the vault contract");
 			return;
 		}
 
 		const assetAddress = await vaultContract.asset();
 		const assetContract = getContract(assetAddress, ierc20, signer);
 		if (!assetContract) {
-			console.log("Can't fetch the erc20 contract")
+			console.log("Can't fetch the erc20 contract");
 			return;
 		}
 
-		const rxc = await assetContract.approve(modalFormData.vault, modalFormData.amount)
+		const rxc = await assetContract.approve(modalFormData.vault, modalFormData.amount);
 		await rxc.wait();
 
-		const strat = await vaultContract.strategy()
+		const strat = await vaultContract.strategy();
 		console.log('start:', strat);
 
-		console.log(modalFormData.amount, modalFormData.receiver)
-		await vaultContract.deposit(modalFormData.amount.toString(), modalFormData.receiver, {gasLimit: 1000000})
+		console.log(modalFormData.amount, modalFormData.receiver);
+		await vaultContract.deposit(modalFormData.amount.toString(), modalFormData.receiver, { gasLimit: 1000000 });
 
 		setModalFormData({
 			vault: '',
@@ -81,31 +79,32 @@ const Core = () => {
 	// TODO: Cut duplicate
 	const fetchVaultList = async (): Promise<string[] | Promise<undefined>> => {
 		if (!userClient.provider || !userClient.address) {
-			console.error("Can't get signer")
+			console.error("Can't get signer");
 			return;
 		}
 
-		const signer = new JsonRpcSigner(userClient.provider as unknown as JsonRpcApiProvider, userClient.address)
+		const signer = new JsonRpcSigner(userClient.provider as unknown as JsonRpcApiProvider, userClient.address);
 		const contract = getContract(FactoryContractAddress, factoryAbi, signer);
 		if (!contract) {
-			console.log("Can't fetch the contract")
+			console.log("Can't fetch the contract");
 			return;
 		}
 
 		// Fetching data until the array is empty
 		const addresses = await contract.getVaults();
 		return addresses;
-	}
+	};
 
 	useEffect(() => {
 		const fetch = async () => {
-			const list = await fetchVaultList()
+			const list = await fetchVaultList();
 			setVaultsAddresses(list);
-			if (list) setModalFormData({...modalFormData, vault: list[0] ,receiver: userClient.address as string});
-		}
+			if (list) setModalFormData({ ...modalFormData, vault: list[0], receiver: userClient.address as string });
+		};
+		if (userClient.setPickedDeposit) userClient.setPickedDeposit(undefined);
 
 		if (userClient.provider && userClient.address) fetch();
-	}, [userClient.provider])
+	}, [userClient.provider]);
 
 	return (
 		<>
@@ -257,10 +256,10 @@ const Core = () => {
 													onChange={onChange}
 													className="mt-2 block w-full rounded-md border-0 bg-gray-600 py-1.5 pl-3 pr-10 text-gray-300 ring-1 ring-inset ring-gray-800 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6"
 												>
-													{
-														vaultsAddresses && vaultsAddresses.map( (address,index) =>
-															<option key={address}>{address}</option> )
-													}
+													{vaultsAddresses &&
+														vaultsAddresses.map((address, index) => (
+															<option key={address}>{address}</option>
+														))}
 												</select>
 											</div>
 											<div className={'mt-2'}>
