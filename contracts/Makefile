@@ -13,9 +13,13 @@ deployGnosis:
 	source .env; \
 	forge script script/Deploy.s.sol:DeployScript --rpc-url $${GNOSIS_RPC_URL} --broadcast 
 
-createVault:
+createApeVault:
 	source .env; \
-	forge script script/DeployVault.s.sol:DeployVaultScript --broadcast --rpc-url http://localhost:8545
+	forge script script/ApeVault.s.sol:ApeVaultScript --broadcast --rpc-url http://localhost:8545
+
+createMockVault:
+	source .env; \
+	forge script script/MockVault.s.sol:MockVaultScript --broadcast --rpc-url http://localhost:8545
 
 deployLocal:
 	source .env; \

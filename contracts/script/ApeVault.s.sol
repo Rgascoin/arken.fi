@@ -7,13 +7,12 @@ import {Factory} from "../src/Factory.sol";
 import {ApeCoinStrategy} from "../src/examples/ApeCoinStrategy.sol";
 import {Vault} from "../src/Vault.sol";
 
-contract DeployVaultScript is Script {
+contract ApeVaultScript is Script {
     Factory factory;
     address operator;
 
     address public constant apeStaker = 0x5954aB967Bc958940b7EB73ee84797Dc8a2AFbb9;
     address public constant apeCoin = 0x4d224452801ACEd8B2F0aebE155379bb5D594381;
-
 
     function setUp() public {
         factory = Factory(vm.envAddress("FACTORY_ADDRESS"));
@@ -26,12 +25,22 @@ contract DeployVaultScript is Script {
         vm.startBroadcast(deployer);
 
         ApeCoinStrategy strategy = new ApeCoinStrategy(deployer, address(apeStaker), address(apeCoin));
+        console.log("Strategy deployed at: %s", address(strategy));
 
         Vault vault = Vault(
             factory.createVault(
-                deployer, address(strategy), operator, 500, deployer, 1 weeks, address(apeCoin), "wstkAPE Token", "wstkAPE"
+                deployer,
+                address(strategy),
+                operator,
+                500,
+                deployer,
+                1 weeks,
+                address(apeCoin),
+                "wstkAPE Token",
+                "wstkAPE"
             )
         );
+        console.log("Vault deployed at: %s", address(vault));
 
         strategy.setVault(address(vault));
 
