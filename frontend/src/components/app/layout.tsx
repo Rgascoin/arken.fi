@@ -1,8 +1,9 @@
 import { Dialog, Transition } from '@headlessui/react';
 import { Bars3Icon, LockClosedIcon } from '@heroicons/react/20/solid';
 import { XMarkIcon } from '@heroicons/react/24/outline';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
-import {Fragment, useEffect, useState} from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 
 import { useUserContext } from '../../contexts/userContext';
 
@@ -86,21 +87,22 @@ const Layout = ({ navigation, children }: IProps) => {
 													<ul role="list" className="-mx-2 space-y-1">
 														{navigation.map((item, index: number) => (
 															<li key={index}>
-																<a
-																	href={item.href}
-																	className={classNames(
-																		item.current
-																			? 'bg-gray-800 text-white'
-																			: 'text-gray-400 hover:text-white hover:bg-gray-800',
-																		'group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold',
-																	)}
-																>
-																	<item.icon
-																		className="h-6 w-6 shrink-0"
-																		aria-hidden="true"
-																	/>
-																	{item.name}
-																</a>
+																<Link href={item.href}>
+																	<div
+																		className={classNames(
+																			item.current
+																				? 'bg-gray-800 text-white'
+																				: 'text-gray-400 hover:text-white hover:bg-gray-800',
+																			'group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold',
+																		)}
+																	>
+																		<item.icon
+																			className="h-6 w-6 shrink-0"
+																			aria-hidden="true"
+																		/>
+																		{item.name}
+																	</div>
+																</Link>
 															</li>
 														))}
 													</ul>
@@ -119,11 +121,7 @@ const Layout = ({ navigation, children }: IProps) => {
 					{/* Sidebar component, swap this element with another sidebar if you like */}
 					<div className="flex grow flex-col gap-y-5 overflow-y-auto bg-black/10 px-6 ring-1 ring-white/5">
 						<div className="flex h-16 shrink-0 items-center">
-							<img
-								className="h-8 w-auto"
-								src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
-								alt="Your Company"
-							/>
+							<img className="h-8 w-auto" src="/logo.png" alt="Your Company" />
 						</div>
 						<nav className="flex flex-1 flex-col">
 							<ul role="list" className="flex flex-1 flex-col gap-y-7">
@@ -131,18 +129,19 @@ const Layout = ({ navigation, children }: IProps) => {
 									<ul role="list" className="-mx-2 space-y-1">
 										{navigation.map((item, index: number) => (
 											<li key={index}>
-												<a
-													href={item.href}
-													className={classNames(
-														item.current
-															? 'bg-gray-800 text-white'
-															: 'text-gray-400 hover:text-white hover:bg-gray-800',
-														'group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold',
-													)}
-												>
-													<item.icon className="h-6 w-6 shrink-0" aria-hidden="true" />
-													{item.name}
-												</a>
+												<Link href={item.href}>
+													<div
+														className={classNames(
+															item.current
+																? 'bg-gray-800 text-white'
+																: 'text-gray-400 hover:text-white hover:bg-gray-800',
+															'group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold',
+														)}
+													>
+														<item.icon className="h-6 w-6 shrink-0" aria-hidden="true" />
+														{item.name}
+													</div>
+												</Link>
 											</li>
 										))}
 									</ul>

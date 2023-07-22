@@ -1,21 +1,19 @@
 import { Dialog, Transition } from '@headlessui/react';
 import { CurrencyDollarIcon } from '@heroicons/react/24/outline';
+import { JsonRpcApiProvider, JsonRpcSigner } from 'ethers';
 import { useRouter } from 'next/router';
 import React, { Fragment, useEffect, useRef, useState } from 'react';
 
+import { useUserContext } from '../../../contexts/userContext';
+import factoryAbi from '../../../web3/abi/Factory.json';
+import ierc20 from '../../../web3/abi/IErc.json';
+import vaultAbi from '../../../web3/abi/Vault.json';
+import getContract from '../../../web3/toolkit/getContract';
 import MainPanel from './mainPanel';
 import SidePanel from './sidePanel';
 import VaultList from './vaultList';
-import getContract from "../../../web3/toolkit/getContract";
-import factoryAbi from "../../../web3/abi/Factory.json";
-import vaultAbi from '../../../web3/abi/Vault.json';
-import ierc20 from '../../../web3/abi/IErc.json';
-
-import {useUserContext} from "../../../contexts/userContext";
-import {JsonRpcApiProvider, JsonRpcSigner} from "ethers";
 
 const FactoryContractAddress = '0x9155497EAE31D432C0b13dBCc0615a37f55a2c87';
-
 
 type ModalFormData = {
 	vault: string;
@@ -32,7 +30,7 @@ const Core = () => {
 		receiver: '',
 		amount: 0,
 	});
-	const [vaultsAddresses, setVaultsAddresses] = useState<string[] | undefined>(undefined)
+	const [vaultsAddresses, setVaultsAddresses] = useState<string[] | undefined>(undefined);
 
 	const [open, setOpen] = useState(false);
 	const cancelButtonRef = useRef(null);
@@ -43,33 +41,33 @@ const Core = () => {
 
 	const requestStaking = async () => {
 		if (!userClient.provider || !userClient.address) {
-			console.error("Can't get signer")
+			console.error("Can't get signer");
 			return;
 		}
 
-		const signer = new JsonRpcSigner(userClient.provider as unknown as JsonRpcApiProvider, userClient.address)
-		console.log(modalFormData.vault)
+		const signer = new JsonRpcSigner(userClient.provider as unknown as JsonRpcApiProvider, userClient.address);
+		console.log(modalFormData.vault);
 		const vaultContract = getContract(modalFormData.vault, vaultAbi, signer);
 		if (!vaultContract) {
-			console.log("Can't fetch the vault contract")
+			console.log("Can't fetch the vault contract");
 			return;
 		}
 
 		const assetAddress = await vaultContract.asset();
 		const assetContract = getContract(assetAddress, ierc20, signer);
 		if (!assetContract) {
-			console.log("Can't fetch the erc20 contract")
+			console.log("Can't fetch the erc20 contract");
 			return;
 		}
 
-		const rxc = await assetContract.approve(modalFormData.vault, modalFormData.amount)
+		const rxc = await assetContract.approve(modalFormData.vault, modalFormData.amount);
 		await rxc.wait();
 
-		const strat = await vaultContract.strategy()
+		const strat = await vaultContract.strategy();
 		console.log('start:', strat);
 
-		console.log(modalFormData.amount, modalFormData.receiver)
-		await vaultContract.deposit(modalFormData.amount.toString(), modalFormData.receiver, {gasLimit: 1000000})
+		console.log(modalFormData.amount, modalFormData.receiver);
+		await vaultContract.deposit(modalFormData.amount.toString(), modalFormData.receiver, { gasLimit: 1000000 });
 
 		setModalFormData({
 			vault: '',
@@ -81,31 +79,32 @@ const Core = () => {
 	// TODO: Cut duplicate
 	const fetchVaultList = async (): Promise<string[] | Promise<undefined>> => {
 		if (!userClient.provider || !userClient.address) {
-			console.error("Can't get signer")
+			console.error("Can't get signer");
 			return;
 		}
 
-		const signer = new JsonRpcSigner(userClient.provider as unknown as JsonRpcApiProvider, userClient.address)
+		const signer = new JsonRpcSigner(userClient.provider as unknown as JsonRpcApiProvider, userClient.address);
 		const contract = getContract(FactoryContractAddress, factoryAbi, signer);
 		if (!contract) {
-			console.log("Can't fetch the contract")
+			console.log("Can't fetch the contract");
 			return;
 		}
 
 		// Fetching data until the array is empty
 		const addresses = await contract.getVaults();
 		return addresses;
-	}
+	};
 
 	useEffect(() => {
 		const fetch = async () => {
-			const list = await fetchVaultList()
+			const list = await fetchVaultList();
 			setVaultsAddresses(list);
-			if (list) setModalFormData({...modalFormData, vault: list[0] ,receiver: userClient.address as string});
-		}
+			if (list) setModalFormData({ ...modalFormData, vault: list[0], receiver: userClient.address as string });
+		};
+		if (userClient.setPickedDeposit) userClient.setPickedDeposit(undefined);
 
 		if (userClient.provider && userClient.address) fetch();
-	}, [userClient.provider])
+	}, [userClient.provider]);
 
 	return (
 		<>
@@ -125,7 +124,7 @@ const Core = () => {
 													query: { focus: '' },
 												});
 											}}
-											className={`my-3 cursor-pointer rounded-xl border border-indigo-600 px-4 py-1 text-sm text-gray-200 transition-all duration-150 ease-in-out hover:scale-105 hover:border-indigo-700 hover:bg-indigo-600`}
+											className={`my-3 cursor-pointer rounded-xl border border-yellow-600 px-4 py-1 text-sm text-gray-200 transition-all duration-150 ease-in-out hover:scale-105 hover:border-yellow-700 hover:bg-yellow-600`}
 										>
 											Stakes
 										</button>
@@ -137,7 +136,7 @@ const Core = () => {
 												});
 											}}
 											className={
-												'my-3 cursor-pointer rounded-xl border border-indigo-600 bg-indigo-600/40 px-4 py-1 text-sm text-gray-200 transition-all duration-150 ease-in-out hover:scale-105 hover:border-indigo-700 hover:bg-indigo-600'
+												'my-3 cursor-pointer rounded-xl border border-yellow-600 bg-yellow-600/40 px-4 py-1 text-sm text-gray-200 transition-all duration-150 ease-in-out hover:scale-105 hover:border-yellow-700 hover:bg-yellow-600'
 											}
 										>
 											Vaults
@@ -152,7 +151,7 @@ const Core = () => {
 													query: { focus: '' },
 												});
 											}}
-											className={`my-3 cursor-pointer rounded-xl border border-indigo-600 bg-indigo-600/40 px-4 py-1 text-sm text-gray-200 transition-all duration-150 ease-in-out hover:scale-105 hover:border-indigo-700 hover:bg-indigo-600`}
+											className={`my-3 cursor-pointer rounded-xl border border-yellow-600 bg-yellow-600/40 px-4 py-1 text-sm text-gray-200 transition-all duration-150 ease-in-out hover:scale-105 hover:border-yellow-700 hover:bg-yellow-600`}
 										>
 											Stakes
 										</button>
@@ -164,7 +163,7 @@ const Core = () => {
 												});
 											}}
 											className={
-												'my-3 cursor-pointer rounded-xl border border-indigo-600 px-4 py-1 text-sm text-gray-200 transition-all duration-150 ease-in-out hover:scale-105 hover:border-indigo-700 hover:bg-indigo-600'
+												'my-3 cursor-pointer rounded-xl border border-yellow-600 px-4 py-1 text-sm text-gray-200 transition-all duration-150 ease-in-out hover:scale-105 hover:border-yellow-700 hover:bg-yellow-600'
 											}
 										>
 											Vaults
@@ -222,9 +221,9 @@ const Core = () => {
 								<Dialog.Panel className="relative overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
 									<div className="bg-gray-700 px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
 										<div className="sm:flex sm:items-start">
-											<div className="mx-auto flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-indigo-100 sm:mx-0 sm:h-10 sm:w-10">
+											<div className="mx-auto flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-yellow-100 sm:mx-0 sm:h-10 sm:w-10">
 												<CurrencyDollarIcon
-													className="h-6 w-6 text-indigo-600"
+													className="h-6 w-6 text-yellow-600"
 													aria-hidden="true"
 												/>
 											</div>
@@ -255,12 +254,12 @@ const Core = () => {
 													name="vault"
 													value={modalFormData.vault}
 													onChange={onChange}
-													className="mt-2 block w-full rounded-md border-0 bg-gray-600 py-1.5 pl-3 pr-10 text-gray-300 ring-1 ring-inset ring-gray-800 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6"
+													className="mt-2 block w-full rounded-md border-0 bg-gray-600 py-1.5 pl-3 pr-10 text-gray-300 ring-1 ring-inset ring-gray-800 focus:ring-2 focus:ring-yellow-600 sm:text-sm sm:leading-6"
 												>
-													{
-														vaultsAddresses && vaultsAddresses.map( (address,index) =>
-															<option key={address}>{address}</option> )
-													}
+													{vaultsAddresses &&
+														vaultsAddresses.map((address, index) => (
+															<option key={address}>{address}</option>
+														))}
 												</select>
 											</div>
 											<div className={'mt-2'}>
@@ -276,8 +275,8 @@ const Core = () => {
 														name="receiver"
 														value={modalFormData.receiver}
 														onChange={onChange}
-														className="block w-full rounded-md border-0 bg-gray-600 px-3 py-1.5 text-gray-300 shadow-sm ring-1 ring-inset ring-gray-700 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-														placeholder="0.00"
+														className="block w-full rounded-md border-0 bg-gray-600 px-3 py-1.5 text-gray-300 shadow-sm ring-1 ring-inset ring-gray-700 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-yellow-600 sm:text-sm sm:leading-6"
+														placeholder="0x"
 														aria-describedby="form text input"
 													/>
 												</div>
@@ -295,7 +294,7 @@ const Core = () => {
 														name="amount"
 														value={modalFormData.amount}
 														onChange={onChange}
-														className="block w-full rounded-md border-0 bg-gray-600 px-3 py-1.5 text-gray-300 shadow-sm ring-1 ring-inset ring-gray-700 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+														className="block w-full rounded-md border-0 bg-gray-600 px-3 py-1.5 text-gray-300 shadow-sm ring-1 ring-inset ring-gray-700 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-yellow-600 sm:text-sm sm:leading-6"
 														placeholder="0.00"
 														aria-describedby="form text input"
 													/>
@@ -305,7 +304,7 @@ const Core = () => {
 									</div>
 									<div className="bg-gray-800 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
 										<button
-											className="inline-flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm transition-all duration-150 ease-in-out hover:scale-105 hover:bg-indigo-500 sm:ml-3 sm:w-auto"
+											className="inline-flex w-full justify-center rounded-md bg-yellow-600 px-3 py-2 text-sm font-semibold text-white shadow-sm transition-all duration-150 ease-in-out hover:scale-105 hover:bg-yellow-500 sm:ml-3 sm:w-auto"
 											onClick={async () => {
 												setOpen(false);
 												await requestStaking();

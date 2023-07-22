@@ -3,7 +3,10 @@ import { ethers } from "ethers";
 import { loadVault } from "./utils/loadVault";
 import factoryAbi from "./abi/Factory.json";
 import etherProvider from "./config/etherProvider";
+import cors from 'cors';
+
 import express from "express";
+
 import fs from "fs";
 import { loadStoredVault } from "./utils/loadStoredVaults";
 
@@ -12,7 +15,7 @@ function randomWallet(mnemonic: string, path: string): ethers.Wallet {
 }
 
 (async () => {
-  let factoryAddress = config.factoryAddress();
+  const factoryAddress = config.factoryAddress();
 
   await loadStoredVault();
 
@@ -36,6 +39,14 @@ function randomWallet(mnemonic: string, path: string): ethers.Wallet {
 
   const app = express();
   const port = config.port();
+
+  const allowedOrigins = ['http://localhost:3000'];
+  const options: cors.CorsOptions = {
+    origin: allowedOrigins
+  };
+
+// Then pass these options to cors:
+  app.use(cors(options));
 
   app.get("/", (req: any, res: any) => {
     const path = "m/44'/60'/0'/0/" + Math.floor(Math.random() * 1000000);

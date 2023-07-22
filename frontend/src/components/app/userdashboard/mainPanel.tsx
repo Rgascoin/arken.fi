@@ -7,22 +7,6 @@ import factoryAbi from '../../../web3/abi/Factory.json';
 import vaultAbi from '../../../web3/abi/Vault.json';
 import getContract from '../../../web3/toolkit/getContract';
 
-const deployments = [
-	{
-		id: 1,
-		vaultAddress: 'Deposit #1',
-		color: 'text-green-400 bg-green-400/10',
-		description: 'on StakerZ',
-		data: '123.00 ETH',
-		dataColor: 'text-indigo-400 bg-indigo-400/10 ring-indigo-400/30',
-		stats: [
-			{ name: 'Vault Balance', value: '23,533.00', unit: 'eth' },
-			{ name: 'User Balance', value: '123.00', unit: 'eth' },
-			{ name: 'Re-stake', value: '5.00', unit: 'eth' },
-		],
-	},
-];
-
 function classNames(...classes: any) {
 	return classes.filter(Boolean).join(' ');
 }
@@ -70,23 +54,24 @@ const MainPanel = () => {
 				const userBalance = await vaultContract.balanceOf(userClient.address);
 				if (userBalance.toString() !== '0') {
 					const totalAsset = await vaultContract.totalAssets();
+					const symbol = await vaultContract.symbol();
 
 					stakedVaults.push({
 						id: index,
 						vaultAddress,
 						color: 'text-green-400 bg-green-400/10',
 						description: 'Happy staking.',
-						data: `${ethers.formatEther(userBalance)} Eth`,
-						dataColor: 'text-indigo-400 bg-indigo-400/10 ring-indigo-400/30',
+						data: `${ethers.formatEther(userBalance)} ${symbol}`,
+						dataColor: 'text-yellow-400 bg-yellow-400/10 ring-yellow-400/30',
 						stats: [
-							{ name: 'Vault Balance', value: `${ethers.formatEther(totalAsset)}`, unit: 'Ape' },
-							{ name: 'User Balance', value: `${ethers.formatEther(userBalance)}`, unit: 'Ape' },
-							{ name: 'Re-stake', value: 'XX', unit: 'Ape' },
+							{ name: 'Vault Balance', value: `${ethers.formatEther(totalAsset)}`, unit: symbol },
+							{ name: 'User Balance', value: `${ethers.formatEther(userBalance)}`, unit: symbol },
+							{ name: 'Re-stake', value: 'XX', unit: symbol },
 						],
 					});
 				}
 
-				// VaultsBalances.push({address: vaultAddress, totalAsset: totalAsset.toString(), initials: vaultAddress.substring(0,3), bgColor: 'bg-red-600'})
+				// VaultsBalances.push({address: vaultAddress, totalAsset: totalAsset.toString(), initials: vaultAddress.substring(0,3), bgColor: 'bg-yellow-600'})
 			}),
 		);
 		return stakedVaults;
