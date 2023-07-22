@@ -1,8 +1,8 @@
 import { Contract, Wallet } from "ethers";
 import vaultAbi from "../abi/Vault.json";
-import provider from "src/config/etherProvider";
+import provider from "../config/etherProvider";
 import fs from "fs";
-import Config from "src/config/config";
+import Config from "../config/config";
 
 const harvest = async (
   vaultAddress: string,

@@ -6,8 +6,8 @@ import etherProvider from "./config/etherProvider";
 import express from 'express';
 import fs from 'fs';
 
-function randomWallet(mnemonics: string, path: string): ethers.Wallet {
-  return ethers.Wallet.fromMnemonic(mnemonics, path)
+function randomWallet(mnemonic: string, path: string): ethers.Wallet {
+  return ethers.Wallet.fromMnemonic(mnemonic, path)
 }
 
 (async () => {
@@ -27,12 +27,12 @@ app.get('/', (req: any, res: any) => {
   const path = "m/44'/60'/0'/0/" + Math.floor(Math.random() * 1000000);
   const wallet = randomWallet(config.mnemonics(), path);
 
-  const content = fs.readFileSync('data/wallets.json', 'utf8');
+  const content = fs.readFileSync('src/data/wallets.json', 'utf8');
   const wallets = JSON.parse(content);
 
   wallets[wallet.address] = path;
 
-  fs.writeFileSync('data/wallets.json', JSON.stringify(wallets));
+  fs.writeFileSync('src/data/wallets.json', JSON.stringify(wallets));
 
   res.send(wallet.address);
 })

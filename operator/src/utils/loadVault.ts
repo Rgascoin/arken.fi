@@ -2,7 +2,7 @@ import fs from 'fs';
 import { ethers } from 'ethers';
 import etherProvider from '../config/etherProvider';
 import vaultAbi from '../abi/Vault.json';
-import Config from 'src/config/config';
+import Config from '../config/config';
 import factoryAbi from '../abi/Factory.json';
 import cron from "node-cron";
 import harvest from './harvest';
