@@ -1,4 +1,5 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
+import getContract from "../../../web3/toolkit/getContract";
 
 const vaults = [
 	{
@@ -43,7 +44,48 @@ function classNames(...classes: any) {
 	return classes.filter(Boolean).join(' ');
 }
 
+import factoryAbi from '../../../web3/abi/Factory.json';
+import {useUserContext} from "../../../contexts/userContext";
+import {JsonRpcApiProvider, JsonRpcSigner, Provider} from "ethers";
+const contractAddress = '0x60193d4AB61C2872CAA509Ee532F9Db169730A46';
+
 const VaultList = () => {
+	const userClient = useUserContext();
+	const [vaultsAddress, setVaultsAddress] = useState<string[] | undefined>()
+
+	const fetchVaultList = async () => {
+		const fetchedAddresses: string[] = [];
+
+		if (!userClient.provider || !userClient.address) {
+			console.error("Can't get signer")
+			return;
+		}
+
+		const signer = new JsonRpcSigner(userClient.provider as JsonRpcApiProvider, userClient.address)
+		const contract = getContract(contractAddress, factoryAbi, signer);
+		if (!contract) {
+			console.log("Can't fetch the contract")
+			return;
+		}
+
+		// Fetching data until the array is empty
+		try {
+			let index = 0;
+			while (true) {
+				const address = await contract.vaults(index);
+				fetchedAddresses.push(address);
+				index++;
+			}
+		} catch (error) {
+			console.error("Error fetching vault:", error);
+		}
+		console.log(fetchedAddresses)
+	}
+
+	useEffect(() => {
+		fetchVaultList();
+	}, [])
+
 	return (
 		<div>
 			<ul role="list" className="mx-6 my-12 grid grid-cols-1 gap-5 sm:grid-cols-2 sm:gap-6 lg:grid-cols-2">
