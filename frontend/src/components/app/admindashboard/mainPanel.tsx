@@ -62,7 +62,7 @@ const MainPanel = () => {
 					operator,
 					gas: (gas as bigint).toString(),
 					color: 'text-green-400 bg-green-400/10',
-					description: 'Happy staking.',
+					description: ethers.formatEther(gas as bigint),
 					data: `${ethers.formatEther(totalAsset)} ${symbol}`,
 					dataColor: 'text-yellow-400 bg-yellow-400/10 ring-yellow-400/30',
 					stats: [{ name: 'Vault Balance', value: `${ethers.formatEther(totalAsset)}`, unit: symbol }],
@@ -121,7 +121,7 @@ const MainPanel = () => {
 									</h2>
 								</div>
 								<div className="mt-3 flex items-center gap-x-2.5 text-xs leading-5 text-gray-400">
-									<p className="whitespace-nowrap">{stake.description}</p>
+									<p className="whitespace-nowrap">Gas left: {stake.description}</p>
 								</div>
 							</div>
 							<div className={'flex-row gap-2 md:flex'}>

@@ -100,7 +100,7 @@ const SidePanel = () => {
 										setActionState(ActionState.withdraw);
 									}}
 									className={
-										'my-3 cursor-pointer rounded-xl border border-red-600 px-4 py-1 text-sm text-gray-200 transition-all duration-150 ease-in-out hover:scale-105 hover:border-red-700 hover:bg-red-600'
+										'my-3 cursor-pointer rounded-xl border border-red-600 px-4 py-1 text-sm text-gray-200 transition-all duration-150 ease-in-out hover:scale-105 hover:border-red-700 hover:bg-yellow-600'
 									}
 								>
 									- Withdraw
@@ -144,7 +144,7 @@ const SidePanel = () => {
 													setActionState(ActionState.none);
 												}}
 												className={
-													'text-md my-3 cursor-pointer rounded-xl border border-red-600 px-4 py-1 text-gray-200 transition-all duration-150 ease-in-out hover:scale-105 hover:border-red-700 hover:bg-red-600'
+													'text-md my-3 cursor-pointer rounded-xl border border-red-600 px-4 py-1 text-gray-200 transition-all duration-150 ease-in-out hover:scale-105 hover:border-red-700 hover:bg-yellow-600'
 												}
 											>
 												Cancel

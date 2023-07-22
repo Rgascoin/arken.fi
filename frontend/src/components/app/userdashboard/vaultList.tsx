@@ -10,6 +10,7 @@ interface VaultData {
 	address: string;
 	totalAsset: string;
 	initials: string;
+	symbol: string;
 	bgColor: string;
 }
 
@@ -53,11 +54,14 @@ const VaultList = () => {
 				const vaultContract = getContract(vaultAddress, vaultAbi, signer);
 				if (!vaultContract) return;
 				const totalAsset = await vaultContract.totalAssets();
+				const symbol = await vaultContract.symbol();
+
 				VaultsBalances.push({
 					address: vaultAddress,
 					totalAsset: totalAsset.toString(),
+					symbol,
 					initials: vaultAddress.substring(0, 3),
-					bgColor: 'bg-red-600',
+					bgColor: 'bg-yellow-600',
 				});
 			}),
 		);
@@ -102,7 +106,7 @@ const VaultList = () => {
 								<div className="flex-1 truncate px-4 py-2 text-sm">
 									<div className="font-medium text-gray-200 hover:text-gray-100">{vault.address}</div>
 									<p className="truncate text-gray-400">
-										Total asset: {ethers.formatEther(vault.totalAsset)}
+										Total asset: {ethers.formatEther(vault.totalAsset)} {vault.symbol}
 									</p>
 								</div>
 							</div>

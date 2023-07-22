@@ -71,7 +71,7 @@ const MainPanel = () => {
 					});
 				}
 
-				// VaultsBalances.push({address: vaultAddress, totalAsset: totalAsset.toString(), initials: vaultAddress.substring(0,3), bgColor: 'bg-red-600'})
+				// VaultsBalances.push({address: vaultAddress, totalAsset: totalAsset.toString(), initials: vaultAddress.substring(0,3), bgColor: 'bg-yellow-600'})
 			}),
 		);
 		return stakedVaults;
