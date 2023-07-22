@@ -5,7 +5,7 @@ import "forge-std/Script.sol";
 
 import {Factory} from "../src/Factory.sol";
 
-contract CounterScript is Script {
+contract DeployScript is Script {
     function setUp() public {}
 
     function run() public {
