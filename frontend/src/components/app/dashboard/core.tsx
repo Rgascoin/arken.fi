@@ -1,10 +1,6 @@
 import MainPanel from './mainPanel';
 import SidePanel from './sidePanel';
 
-function classNames(...classes: any) {
-	return classes.filter(Boolean).join(' ');
-}
-
 const Core = () => {
 	return (
 		<div>
