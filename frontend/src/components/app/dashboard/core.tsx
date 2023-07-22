@@ -9,6 +9,7 @@ import VaultList from './vaultList';
 import getContract from "../../../web3/toolkit/getContract";
 import factoryAbi from "../../../web3/abi/Factory.json";
 import vaultAbi from '../../../web3/abi/Vault.json';
+import ierc20 from '../../../web3/abi/IErc.json';
 
 import {useUserContext} from "../../../contexts/userContext";
 import {JsonRpcApiProvider, JsonRpcSigner} from "ethers";
@@ -48,14 +49,27 @@ const Core = () => {
 
 		const signer = new JsonRpcSigner(userClient.provider as unknown as JsonRpcApiProvider, userClient.address)
 		console.log(modalFormData.vault)
-		const contract = getContract(modalFormData.vault, vaultAbi, signer);
-		if (!contract) {
-			console.log("Can't fetch the contract")
+		const vaultContract = getContract(modalFormData.vault, vaultAbi, signer);
+		if (!vaultContract) {
+			console.log("Can't fetch the vault contract")
 			return;
 		}
 
-		await contract.approve(modalFormData.vault, modalFormData.amount);
-		await contract.deposit(modalFormData.amount, modalFormData.receiver)
+		const assetAddress = await vaultContract.asset();
+		const assetContract = getContract(assetAddress, ierc20, signer);
+		if (!assetContract) {
+			console.log("Can't fetch the erc20 contract")
+			return;
+		}
+
+		const rxc = await assetContract.approve(modalFormData.vault, modalFormData.amount)
+		await rxc.wait();
+
+		const strat = await vaultContract.strategy()
+		console.log('start:', strat);
+
+		console.log(modalFormData.amount, modalFormData.receiver)
+		await vaultContract.deposit(modalFormData.amount.toString(), modalFormData.receiver, {gasLimit: 1000000})
 
 		setModalFormData({
 			vault: '',
