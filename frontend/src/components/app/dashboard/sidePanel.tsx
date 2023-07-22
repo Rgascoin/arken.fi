@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import { useUserContext } from '../../../contexts/userContext';
 
@@ -6,8 +6,16 @@ function classNames(...classes: any) {
 	return classes.filter(Boolean).join(' ');
 }
 
+enum ActionState {
+	none = 'NONE',
+	deposit = 'DEPOSIT',
+	withdraw = 'WITHDRAW',
+}
+
 const SidePanel = () => {
 	const userContext = useUserContext();
+	const [dataForm, setDataForm] = useState<number>(0);
+	const [actionState, setActionState] = useState<ActionState>(ActionState.none);
 
 	return (
 		<>
@@ -49,6 +57,9 @@ const SidePanel = () => {
 							</div>
 							<div className={'flex items-center justify-center gap-x-8 px-3'}>
 								<button
+									onClick={async () => {
+										setActionState(ActionState.deposit);
+									}}
 									className={
 										'my-3 cursor-pointer rounded-xl border border-indigo-600 px-4 py-1 text-sm text-gray-200 transition-all duration-150 ease-in-out hover:scale-105 hover:border-indigo-700 hover:bg-indigo-600'
 									}
@@ -56,6 +67,9 @@ const SidePanel = () => {
 									+ Deposit
 								</button>
 								<button
+									onClick={async () => {
+										setActionState(ActionState.withdraw);
+									}}
 									className={
 										'my-3 cursor-pointer rounded-xl border border-red-600 px-4 py-1 text-sm text-gray-200 transition-all duration-150 ease-in-out hover:scale-105 hover:border-red-700 hover:bg-red-600'
 									}
@@ -63,6 +77,56 @@ const SidePanel = () => {
 									- Withdraw
 								</button>
 							</div>
+
+							{actionState !== ActionState.none && (
+								<div>
+									{' '}
+									<div className={'mx-20 my-4 border border-gray-600'} />
+									<div className={'m-3'}>
+										<label
+											htmlFor="email"
+											className="block text-sm font-medium leading-6 text-gray-200"
+										>
+											{actionState === ActionState.deposit ? 'Deposit' : 'Withdraw'}
+											{'  '}amount
+										</label>
+										<div className="mt-2">
+											<input
+												type="text"
+												name="text"
+												id="dataForm"
+												value={dataForm}
+												onChange={(e: any) => {
+													setDataForm(e.target.value);
+												}}
+												className="block w-full rounded-md border-0 bg-gray-900 px-3 py-1.5 text-gray-300 shadow-sm ring-1 ring-inset ring-gray-700 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+												placeholder="0.00"
+												aria-describedby="form text input"
+											/>
+										</div>
+
+										<div className={'flex items-center justify-center gap-x-8 px-3'}>
+											<button
+												onClick={async () => {
+													setActionState(ActionState.none);
+												}}
+												className={
+													'text-md my-3 cursor-pointer rounded-xl border border-red-600 px-4 py-1 text-gray-200 transition-all duration-150 ease-in-out hover:scale-105 hover:border-red-700 hover:bg-red-600'
+												}
+											>
+												Cancel
+											</button>
+											<button
+												className={
+													'text-md my-3 cursor-pointer rounded-xl border border-indigo-600 px-4 py-1 text-gray-200 transition-all duration-150 ease-in-out hover:scale-105 hover:border-indigo-700 hover:bg-indigo-600'
+												}
+											>
+												Validate
+											</button>
+										</div>
+									</div>
+								</div>
+							)}
 						</div>
 					) : (
 						<div className={'py-4 text-center text-gray-500'}>Picked a deposit</div>
