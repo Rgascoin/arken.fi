@@ -1,9 +1,11 @@
 import { Dialog, Transition } from '@headlessui/react';
 import { CurrencyDollarIcon } from '@heroicons/react/24/outline';
+import { useRouter } from 'next/router';
 import React, { Fragment, useEffect, useRef, useState } from 'react';
 
 import MainPanel from './mainPanel';
 import SidePanel from './sidePanel';
+import VaultList from './vaultList';
 
 type ModalFormData = {
 	vault: string;
@@ -11,6 +13,8 @@ type ModalFormData = {
 };
 
 const Core = () => {
+	const router = useRouter();
+	const { focus } = router.query;
 	const [modalFormData, setModalFormData] = useState<ModalFormData>({
 		vault: '',
 		amount: 0,
@@ -39,21 +43,78 @@ const Core = () => {
 						<div className={'text-gray-400'}>
 							<h1 className="text-base font-semibold leading-7 text-white">Deposit List</h1>
 							<h2>View all your deposit list</h2>
-							<button
-								onClick={() => {
-									setOpen(true);
-								}}
-								className={
-									'my-3 cursor-pointer rounded-xl border border-indigo-600 px-4 py-1 text-sm text-gray-200 transition-all duration-150 ease-in-out hover:scale-105 hover:border-indigo-700 hover:bg-indigo-600'
-								}
-							>
-								+ New Stake
-							</button>
+							<div className={'flex w-full flex-auto flex-wrap space-x-3'}>
+								{focus === 'vaults' ? (
+									<>
+										<button
+											onClick={async () => {
+												await router.push({
+													pathname: '/app/userDashboard',
+													query: { focus: '' },
+												});
+											}}
+											className={`my-3 cursor-pointer rounded-xl border border-indigo-600 px-4 py-1 text-sm text-gray-200 transition-all duration-150 ease-in-out hover:scale-105 hover:border-indigo-700 hover:bg-indigo-600`}
+										>
+											Stakes
+										</button>
+										<button
+											onClick={async () => {
+												await router.push({
+													pathname: '/app/userDashboard',
+													query: { focus: 'vaults' },
+												});
+											}}
+											className={
+												'my-3 cursor-pointer rounded-xl border border-indigo-600 bg-indigo-600/40 px-4 py-1 text-sm text-gray-200 transition-all duration-150 ease-in-out hover:scale-105 hover:border-indigo-700 hover:bg-indigo-600'
+											}
+										>
+											Vaults
+										</button>
+									</>
+								) : (
+									<>
+										<button
+											onClick={async () => {
+												await router.push({
+													pathname: '/app/userDashboard',
+													query: { focus: '' },
+												});
+											}}
+											className={`my-3 cursor-pointer rounded-xl border border-indigo-600 bg-indigo-600/40 px-4 py-1 text-sm text-gray-200 transition-all duration-150 ease-in-out hover:scale-105 hover:border-indigo-700 hover:bg-indigo-600`}
+										>
+											Stakes
+										</button>
+										<button
+											onClick={async () => {
+												await router.push({
+													pathname: '/app/userDashboard',
+													query: { focus: 'vaults' },
+												});
+											}}
+											className={
+												'my-3 cursor-pointer rounded-xl border border-indigo-600 px-4 py-1 text-sm text-gray-200 transition-all duration-150 ease-in-out hover:scale-105 hover:border-indigo-700 hover:bg-indigo-600'
+											}
+										>
+											Vaults
+										</button>
+									</>
+								)}
+								<button
+									onClick={() => {
+										setOpen(true);
+									}}
+									className={
+										'my-3 cursor-pointer rounded-xl border border-orange-600 px-4 py-1 text-sm text-gray-200 transition-all duration-150 ease-in-out hover:scale-105 hover:border-orange-700 hover:bg-orange-600'
+									}
+								>
+									+ New Stake
+								</button>
+							</div>
 						</div>
 					</header>
 
 					{/* Main list */}
-					<MainPanel />
+					{focus === 'vaults' ? <VaultList /> : <MainPanel />}
 				</main>
 
 				{/* Side feed */}

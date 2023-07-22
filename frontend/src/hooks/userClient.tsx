@@ -1,23 +1,27 @@
+import { Provider } from 'ethers';
 import { useEffect, useState } from 'react';
 
 export interface UserClientInterface {
 	address: string | undefined;
+	provider: Provider | undefined;
 	pickedDeposit: any;
 	setPickedDeposit: ((a: any) => Promise<void>) | undefined;
-	login: ((a: string) => Promise<boolean>) | undefined;
-	logout: (() => Promise<void>) | undefined;
+	setProvider: ((a: Provider) => Promise<void>) | undefined;
+	setAddress: ((a: string) => Promise<void>) | undefined;
 }
 
 const userInitialState: UserClientInterface = {
 	address: undefined,
+	provider: undefined,
 	pickedDeposit: undefined,
 	setPickedDeposit: undefined,
-	login: undefined,
-	logout: undefined,
+	setProvider: undefined,
+	setAddress: undefined,
 };
 
 const UseUserClient = () => {
 	const [address, setAddress] = useState<string | undefined>(undefined);
+	const [provider, setProvider] = useState<Provider | undefined>(undefined);
 	const [pickedDeposit, setPickedDeposit] = useState<any>(undefined);
 
 	// TODO: Fetch the user automatically at loading if possible
@@ -26,28 +30,13 @@ const UseUserClient = () => {
 		if (pkh) setAddress(pkh);
 	}, []);
 
-	const login = async (addressParam: string) => {
-		try {
-			localStorage.setItem('accountPkh', addressParam);
-			setAddress(addressParam);
-		} catch (e: any) {
-			console.error(e);
-			return false;
-		}
-
-		return true;
-	};
-
-	const logout = async () => {
-		await setAddress(undefined);
-	};
-
 	return {
 		address,
+		provider,
 		pickedDeposit,
 		setPickedDeposit,
-		login,
-		logout,
+		setAddress,
+		setProvider,
 	} as UserClientInterface;
 };
 

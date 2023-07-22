@@ -174,8 +174,6 @@ const Layout = ({ navigation, children }: IProps) => {
 									<button
 										className={'ml-auto'}
 										onClick={async () => {
-											if (!userContext.logout) return;
-											await userContext.logout();
 											await router.push('/');
 										}}
 									>
