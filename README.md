@@ -63,6 +63,7 @@ Here are the addresses for the deployed contracts:
 
 ### Factory
 
-- mantle address:
-- gnosischain address:
-- neon evm address:
+- mantle address: [0x9D56902F43E958E3605CFb0F8BEDA79717a1496F](https://explorer.testnet.mantle.xyz/address/0x9D56902F43E958E3605CFb0F8BEDA79717a1496F/contracts#address-tabs)
+- gnosischain address: [0x836f2bed29187b97fc00d087b83ed40b1290829a](https://gnosis-chiado.blockscout.com/address/0x836F2bed29187B97FC00D087b83Ed40B1290829a)
+- neon evm address: [0xe8A56109b80E521Ed407e3DbE41164b1fc5e8E2f](https://neonscan.org/address/0xe8A56109b80E521Ed407e3DbE41164b1fc5e8E2f)
+- goerli address: [0xE493Aa5AFa3a93689C6CEA491821D7c777534949](https://goerli.etherscan.io/address/0xE493Aa5AFa3a93689C6CEA491821D7c777534949)
