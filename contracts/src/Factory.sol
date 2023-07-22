@@ -17,6 +17,48 @@ contract Factory is Owned {
 
     constructor(address initialOwner) Owned(initialOwner) {}
 
+    function getAdminVaults(address admin) public view returns (address[] memory) {
+        uint256 length = 0;
+        for (uint256 i = 0; i < vaults.length; ++i) {
+            if (Vault(vaults[i]).owner() == admin) {
+                ++length;
+            }
+        }
+
+        address[] memory adminVaults = new address[](length);
+        uint256 index = 0;
+        for (uint256 i = 0; i < vaults.length; ++i) {
+            if (Vault(vaults[i]).owner() == admin) {
+                adminVaults[index] = vaults[i];
+                ++index;
+            }
+        }
+        return adminVaults;
+    }
+
+    function getVaults() public view returns (address[] memory) {
+        return vaults;
+    }
+
+    function getDepositedVaults(address user) public view returns (address[] memory) {
+        uint256 length = 0;
+        for (uint256 i = 0; i < vaults.length; ++i) {
+            if (Vault(vaults[i]).balanceOf(user) > 0) {
+                ++length;
+            }
+        }
+
+        address[] memory depositedVaults = new address[](length);
+        uint256 index = 0;
+        for (uint256 i = 0; i < vaults.length; ++i) {
+            if (Vault(vaults[i]).balanceOf(user) > 0) {
+                depositedVaults[index] = vaults[i];
+                ++index;
+            }
+        }
+        return depositedVaults;
+    }
+
     function createVault(
         address owner,
         address strategy,

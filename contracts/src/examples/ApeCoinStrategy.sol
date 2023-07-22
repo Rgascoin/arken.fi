@@ -37,7 +37,7 @@ contract ApeCoinStrategy is IStrategy, Owned {
     address public asset;
     address public vault;
 
-    modifier onlyVault {
+    modifier onlyVault() {
         if (msg.sender != vault) revert Errors.NotVault();
         _;
     }
