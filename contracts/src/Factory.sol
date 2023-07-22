@@ -7,7 +7,12 @@ import {Vault} from "./Vault.sol";
 contract Factory is Owned {
     event VaultCreated(address indexed owner, address indexed asset, address vault);
 
-    mapping(address admin => mapping(address token => address[] vaults)) public vaultsMapping;
+    struct VaultInfo {
+        address vault;
+        uint256 interval;
+    }
+
+    mapping(address admin => mapping(address token => VaultInfo[] vaults)) public vaultsMapping;
     address[] public vaults;
 
     constructor(address initialOwner) Owned(initialOwner) {}
@@ -18,6 +23,7 @@ contract Factory is Owned {
         address operator,
         uint256 fee,
         address feeRecipient,
+        uint256 interval,
         address asset,
         string memory name,
         string memory symbol
@@ -34,7 +40,7 @@ contract Factory is Owned {
             symbol)
         );
 
-        vaultsMapping[owner][asset].push(vault);
+        vaultsMapping[owner][asset].push(VaultInfo(vault, interval));
         vaults.push(vault);
         emit VaultCreated(owner, asset, vault);
 
