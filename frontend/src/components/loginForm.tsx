@@ -1,14 +1,13 @@
 /* eslint-disable @typescript-eslint/no-shadow */
-import Web3Modal from 'web3modal';
-
 import { useSignIn } from '@walletconnect/modal-auth-react';
+import WalletConnectProvider from '@walletconnect/web3-provider';
+import { ethers } from 'ethers';
 import { useRouter } from 'next/router';
 import * as process from 'process';
-import React, {useEffect} from 'react';
+import React, { useEffect } from 'react';
+import Web3Modal from 'web3modal';
 
 import { useUserContext } from '../contexts/userContext';
-import {ethers} from "ethers";
-import WalletConnectProvider from "@walletconnect/web3-provider";
 
 const providerOptions = {
 	walletconnect: {
@@ -40,7 +39,7 @@ const LoginForm = () => {
 
 	const onSignIn = async () => {
 		if (!web3Modal || !userClient.setProvider || !userClient.setAddress) {
-			console.error('cant init login')
+			console.error('cant init login');
 			return;
 		}
 		const provider = await web3Modal.connect();
@@ -51,7 +50,7 @@ const LoginForm = () => {
 		await userClient.setProvider(web3Provider);
 		await userClient.setAddress(address);
 
-		await router.push('/app/userDashboard')
+		await router.push('/app/userDashboard');
 	};
 
 	return (
@@ -60,11 +59,7 @@ const LoginForm = () => {
 				<div className="flex flex-1 flex-col justify-center px-4 py-12 sm:px-6 lg:flex-none lg:px-20 xl:px-24">
 					<div className="mx-auto w-full max-w-sm lg:w-96">
 						<div>
-							<img
-								className="h-10 w-auto"
-								src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
-								alt="Your Company"
-							/>
+							<img className="h-10 w-auto" src="/logo.png" alt="Your Company" />
 							<h2 className="mt-8 text-2xl font-bold leading-9 tracking-tight text-gray-100">
 								Sign in to your account
 							</h2>
@@ -72,7 +67,7 @@ const LoginForm = () => {
 								Don&apos;t have a wallet?{' '}
 								<a
 									href="https://zerion.io/"
-									className="font-semibold text-indigo-600 hover:text-indigo-500"
+									className="font-semibold text-yellow-600 hover:text-yellow-500"
 								>
 									Start now with Zerion
 								</a>

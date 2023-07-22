@@ -38,7 +38,8 @@ const SidePanel = () => {
 								{userContext.pickedDeposit.vaultAddress}
 							</h2>
 							<h2 className={'px-3 pb-3 text-sm text-gray-400'}>
-								gas left: {ethers.formatEther(userContext.pickedDeposit.gas)}
+								gas left:{' '}
+								{userContext.pickedDeposit.gas && ethers.formatEther(userContext.pickedDeposit.gas)}
 							</h2>
 							<button
 								onClick={async () => {

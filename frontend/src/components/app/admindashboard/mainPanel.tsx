@@ -53,6 +53,7 @@ const MainPanel = () => {
 				if (!vaultContract) return;
 				const totalAsset = await vaultContract.totalAssets();
 				const operator = await vaultContract.operator();
+				const symbol = await vaultContract.symbol();
 				const gas = await userClient.provider?.getBalance(operator);
 
 				stakedVaults.push({
@@ -62,9 +63,9 @@ const MainPanel = () => {
 					gas: (gas as bigint).toString(),
 					color: 'text-green-400 bg-green-400/10',
 					description: 'Happy staking.',
-					data: `${ethers.formatEther(totalAsset)} Ape`,
-					dataColor: 'text-indigo-400 bg-indigo-400/10 ring-indigo-400/30',
-					stats: [{ name: 'Vault Balance', value: `${ethers.formatEther(totalAsset)}`, unit: 'Ape' }],
+					data: `${ethers.formatEther(totalAsset)} ${symbol}`,
+					dataColor: 'text-yellow-400 bg-yellow-400/10 ring-yellow-400/30',
+					stats: [{ name: 'Vault Balance', value: `${ethers.formatEther(totalAsset)}`, unit: symbol }],
 				});
 			}),
 		);

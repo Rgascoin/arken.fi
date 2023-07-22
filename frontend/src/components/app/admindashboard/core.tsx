@@ -122,7 +122,7 @@ const Core = () => {
 													query: { focus: '' },
 												});
 											}}
-											className={`my-3 cursor-pointer rounded-xl border border-indigo-600 px-4 py-1 text-sm text-gray-200 transition-all duration-150 ease-in-out hover:scale-105 hover:border-indigo-700 hover:bg-indigo-600`}
+											className={`my-3 cursor-pointer rounded-xl border border-yellow-600 px-4 py-1 text-sm text-gray-200 transition-all duration-150 ease-in-out hover:scale-105 hover:border-yellow-700 hover:bg-yellow-600`}
 										>
 											Your Vaults
 										</button>
@@ -134,7 +134,7 @@ const Core = () => {
 												});
 											}}
 											className={
-												'my-3 cursor-pointer rounded-xl border border-indigo-600 bg-indigo-600/40 px-4 py-1 text-sm text-gray-200 transition-all duration-150 ease-in-out hover:scale-105 hover:border-indigo-700 hover:bg-indigo-600'
+												'my-3 cursor-pointer rounded-xl border border-yellow-600 bg-yellow-600/40 px-4 py-1 text-sm text-gray-200 transition-all duration-150 ease-in-out hover:scale-105 hover:border-yellow-700 hover:bg-yellow-600'
 											}
 										>
 											All Vaults
@@ -149,7 +149,7 @@ const Core = () => {
 													query: { focus: '' },
 												});
 											}}
-											className={`my-3 cursor-pointer rounded-xl border border-indigo-600 bg-indigo-600/40 px-4 py-1 text-sm text-gray-200 transition-all duration-150 ease-in-out hover:scale-105 hover:border-indigo-700 hover:bg-indigo-600`}
+											className={`my-3 cursor-pointer rounded-xl border border-yellow-600 bg-yellow-600/40 px-4 py-1 text-sm text-gray-200 transition-all duration-150 ease-in-out hover:scale-105 hover:border-yellow-700 hover:bg-yellow-600`}
 										>
 											Your Vaults
 										</button>
@@ -161,7 +161,7 @@ const Core = () => {
 												});
 											}}
 											className={
-												'my-3 cursor-pointer rounded-xl border border-indigo-600 px-4 py-1 text-sm text-gray-200 transition-all duration-150 ease-in-out hover:scale-105 hover:border-indigo-700 hover:bg-indigo-600'
+												'my-3 cursor-pointer rounded-xl border border-yellow-600 px-4 py-1 text-sm text-gray-200 transition-all duration-150 ease-in-out hover:scale-105 hover:border-yellow-700 hover:bg-yellow-600'
 											}
 										>
 											All Vaults
@@ -219,9 +219,9 @@ const Core = () => {
 								<Dialog.Panel className="relative overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
 									<div className="bg-gray-700 px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
 										<div className="sm:flex sm:items-start">
-											<div className="mx-auto flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-indigo-100 sm:mx-0 sm:h-10 sm:w-10">
+											<div className="mx-auto flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-yellow-100 sm:mx-0 sm:h-10 sm:w-10">
 												<CurrencyDollarIcon
-													className="h-6 w-6 text-indigo-600"
+													className="h-6 w-6 text-yellow-600"
 													aria-hidden="true"
 												/>
 											</div>
@@ -253,7 +253,7 @@ const Core = () => {
 														name="owner"
 														value={modalFormData.owner}
 														onChange={onChange}
-														className="block w-full rounded-md border-0 bg-gray-600 px-3 py-1.5 text-gray-300 shadow-sm ring-1 ring-inset ring-gray-700 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+														className="block w-full rounded-md border-0 bg-gray-600 px-3 py-1.5 text-gray-300 shadow-sm ring-1 ring-inset ring-gray-700 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-yellow-600 sm:text-sm sm:leading-6"
 														aria-describedby="form text input"
 													/>
 												</div>
@@ -271,7 +271,7 @@ const Core = () => {
 														name="strategy"
 														value={modalFormData.strategy}
 														onChange={onChange}
-														className="block w-full rounded-md border-0 bg-gray-600 px-3 py-1.5 text-gray-300 shadow-sm ring-1 ring-inset ring-gray-700 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+														className="block w-full rounded-md border-0 bg-gray-600 px-3 py-1.5 text-gray-300 shadow-sm ring-1 ring-inset ring-gray-700 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-yellow-600 sm:text-sm sm:leading-6"
 														aria-describedby="form text input"
 													/>
 												</div>
@@ -289,7 +289,7 @@ const Core = () => {
 														name="operator"
 														value={modalFormData.operator}
 														onChange={onChange}
-														className="block w-full rounded-md border-0 bg-gray-600 px-3 py-1.5 text-gray-300 shadow-sm ring-1 ring-inset ring-gray-700 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+														className="block w-full rounded-md border-0 bg-gray-600 px-3 py-1.5 text-gray-300 shadow-sm ring-1 ring-inset ring-gray-700 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-yellow-600 sm:text-sm sm:leading-6"
 														aria-describedby="form text input"
 													/>
 												</div>
@@ -307,7 +307,7 @@ const Core = () => {
 														name="fee"
 														value={modalFormData.fee.toString()}
 														onChange={onChange}
-														className="block w-full rounded-md border-0 bg-gray-600 px-3 py-1.5 text-gray-300 shadow-sm ring-1 ring-inset ring-gray-700 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+														className="block w-full rounded-md border-0 bg-gray-600 px-3 py-1.5 text-gray-300 shadow-sm ring-1 ring-inset ring-gray-700 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-yellow-600 sm:text-sm sm:leading-6"
 														aria-describedby="form text input"
 													/>
 												</div>
@@ -325,7 +325,7 @@ const Core = () => {
 														name="feeRecipient"
 														value={modalFormData.feeRecipient}
 														onChange={onChange}
-														className="block w-full rounded-md border-0 bg-gray-600 px-3 py-1.5 text-gray-300 shadow-sm ring-1 ring-inset ring-gray-700 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+														className="block w-full rounded-md border-0 bg-gray-600 px-3 py-1.5 text-gray-300 shadow-sm ring-1 ring-inset ring-gray-700 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-yellow-600 sm:text-sm sm:leading-6"
 														aria-describedby="form text input"
 													/>
 												</div>
@@ -343,7 +343,7 @@ const Core = () => {
 														name="interval"
 														value={modalFormData.interval.toString()}
 														onChange={onChange}
-														className="block w-full rounded-md border-0 bg-gray-600 px-3 py-1.5 text-gray-300 shadow-sm ring-1 ring-inset ring-gray-700 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+														className="block w-full rounded-md border-0 bg-gray-600 px-3 py-1.5 text-gray-300 shadow-sm ring-1 ring-inset ring-gray-700 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-yellow-600 sm:text-sm sm:leading-6"
 														aria-describedby="form text input"
 													/>
 												</div>
@@ -361,7 +361,7 @@ const Core = () => {
 														name="asset"
 														value={modalFormData.asset}
 														onChange={onChange}
-														className="block w-full rounded-md border-0 bg-gray-600 px-3 py-1.5 text-gray-300 shadow-sm ring-1 ring-inset ring-gray-700 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+														className="block w-full rounded-md border-0 bg-gray-600 px-3 py-1.5 text-gray-300 shadow-sm ring-1 ring-inset ring-gray-700 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-yellow-600 sm:text-sm sm:leading-6"
 														aria-describedby="form text input"
 													/>
 												</div>
@@ -379,7 +379,7 @@ const Core = () => {
 														name="name"
 														value={modalFormData.name}
 														onChange={onChange}
-														className="block w-full rounded-md border-0 bg-gray-600 px-3 py-1.5 text-gray-300 shadow-sm ring-1 ring-inset ring-gray-700 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+														className="block w-full rounded-md border-0 bg-gray-600 px-3 py-1.5 text-gray-300 shadow-sm ring-1 ring-inset ring-gray-700 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-yellow-600 sm:text-sm sm:leading-6"
 														aria-describedby="form text input"
 													/>
 												</div>
@@ -397,7 +397,7 @@ const Core = () => {
 														name="symbol"
 														value={modalFormData.symbol}
 														onChange={onChange}
-														className="block w-full rounded-md border-0 bg-gray-600 px-3 py-1.5 text-gray-300 shadow-sm ring-1 ring-inset ring-gray-700 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+														className="block w-full rounded-md border-0 bg-gray-600 px-3 py-1.5 text-gray-300 shadow-sm ring-1 ring-inset ring-gray-700 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-yellow-600 sm:text-sm sm:leading-6"
 														aria-describedby="form text input"
 													/>
 												</div>
@@ -406,7 +406,7 @@ const Core = () => {
 									</div>
 									<div className="bg-gray-800 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
 										<button
-											className="inline-flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm transition-all duration-150 ease-in-out hover:scale-105 hover:bg-indigo-500 sm:ml-3 sm:w-auto"
+											className="inline-flex w-full justify-center rounded-md bg-yellow-600 px-3 py-2 text-sm font-semibold text-white shadow-sm transition-all duration-150 ease-in-out hover:scale-105 hover:bg-yellow-500 sm:ml-3 sm:w-auto"
 											onClick={async () => {
 												setOpen(false);
 												await requestStaking();

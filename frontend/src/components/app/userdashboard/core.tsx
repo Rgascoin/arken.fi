@@ -124,7 +124,7 @@ const Core = () => {
 													query: { focus: '' },
 												});
 											}}
-											className={`my-3 cursor-pointer rounded-xl border border-indigo-600 px-4 py-1 text-sm text-gray-200 transition-all duration-150 ease-in-out hover:scale-105 hover:border-indigo-700 hover:bg-indigo-600`}
+											className={`my-3 cursor-pointer rounded-xl border border-yellow-600 px-4 py-1 text-sm text-gray-200 transition-all duration-150 ease-in-out hover:scale-105 hover:border-yellow-700 hover:bg-yellow-600`}
 										>
 											Stakes
 										</button>
@@ -136,7 +136,7 @@ const Core = () => {
 												});
 											}}
 											className={
-												'my-3 cursor-pointer rounded-xl border border-indigo-600 bg-indigo-600/40 px-4 py-1 text-sm text-gray-200 transition-all duration-150 ease-in-out hover:scale-105 hover:border-indigo-700 hover:bg-indigo-600'
+												'my-3 cursor-pointer rounded-xl border border-yellow-600 bg-yellow-600/40 px-4 py-1 text-sm text-gray-200 transition-all duration-150 ease-in-out hover:scale-105 hover:border-yellow-700 hover:bg-yellow-600'
 											}
 										>
 											Vaults
@@ -151,7 +151,7 @@ const Core = () => {
 													query: { focus: '' },
 												});
 											}}
-											className={`my-3 cursor-pointer rounded-xl border border-indigo-600 bg-indigo-600/40 px-4 py-1 text-sm text-gray-200 transition-all duration-150 ease-in-out hover:scale-105 hover:border-indigo-700 hover:bg-indigo-600`}
+											className={`my-3 cursor-pointer rounded-xl border border-yellow-600 bg-yellow-600/40 px-4 py-1 text-sm text-gray-200 transition-all duration-150 ease-in-out hover:scale-105 hover:border-yellow-700 hover:bg-yellow-600`}
 										>
 											Stakes
 										</button>
@@ -163,7 +163,7 @@ const Core = () => {
 												});
 											}}
 											className={
-												'my-3 cursor-pointer rounded-xl border border-indigo-600 px-4 py-1 text-sm text-gray-200 transition-all duration-150 ease-in-out hover:scale-105 hover:border-indigo-700 hover:bg-indigo-600'
+												'my-3 cursor-pointer rounded-xl border border-yellow-600 px-4 py-1 text-sm text-gray-200 transition-all duration-150 ease-in-out hover:scale-105 hover:border-yellow-700 hover:bg-yellow-600'
 											}
 										>
 											Vaults
@@ -221,9 +221,9 @@ const Core = () => {
 								<Dialog.Panel className="relative overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
 									<div className="bg-gray-700 px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
 										<div className="sm:flex sm:items-start">
-											<div className="mx-auto flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-indigo-100 sm:mx-0 sm:h-10 sm:w-10">
+											<div className="mx-auto flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-yellow-100 sm:mx-0 sm:h-10 sm:w-10">
 												<CurrencyDollarIcon
-													className="h-6 w-6 text-indigo-600"
+													className="h-6 w-6 text-yellow-600"
 													aria-hidden="true"
 												/>
 											</div>
@@ -254,7 +254,7 @@ const Core = () => {
 													name="vault"
 													value={modalFormData.vault}
 													onChange={onChange}
-													className="mt-2 block w-full rounded-md border-0 bg-gray-600 py-1.5 pl-3 pr-10 text-gray-300 ring-1 ring-inset ring-gray-800 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6"
+													className="mt-2 block w-full rounded-md border-0 bg-gray-600 py-1.5 pl-3 pr-10 text-gray-300 ring-1 ring-inset ring-gray-800 focus:ring-2 focus:ring-yellow-600 sm:text-sm sm:leading-6"
 												>
 													{vaultsAddresses &&
 														vaultsAddresses.map((address, index) => (
@@ -275,7 +275,7 @@ const Core = () => {
 														name="receiver"
 														value={modalFormData.receiver}
 														onChange={onChange}
-														className="block w-full rounded-md border-0 bg-gray-600 px-3 py-1.5 text-gray-300 shadow-sm ring-1 ring-inset ring-gray-700 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+														className="block w-full rounded-md border-0 bg-gray-600 px-3 py-1.5 text-gray-300 shadow-sm ring-1 ring-inset ring-gray-700 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-yellow-600 sm:text-sm sm:leading-6"
 														placeholder="0x"
 														aria-describedby="form text input"
 													/>
@@ -294,7 +294,7 @@ const Core = () => {
 														name="amount"
 														value={modalFormData.amount}
 														onChange={onChange}
-														className="block w-full rounded-md border-0 bg-gray-600 px-3 py-1.5 text-gray-300 shadow-sm ring-1 ring-inset ring-gray-700 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+														className="block w-full rounded-md border-0 bg-gray-600 px-3 py-1.5 text-gray-300 shadow-sm ring-1 ring-inset ring-gray-700 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-yellow-600 sm:text-sm sm:leading-6"
 														placeholder="0.00"
 														aria-describedby="form text input"
 													/>
@@ -304,7 +304,7 @@ const Core = () => {
 									</div>
 									<div className="bg-gray-800 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
 										<button
-											className="inline-flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm transition-all duration-150 ease-in-out hover:scale-105 hover:bg-indigo-500 sm:ml-3 sm:w-auto"
+											className="inline-flex w-full justify-center rounded-md bg-yellow-600 px-3 py-2 text-sm font-semibold text-white shadow-sm transition-all duration-150 ease-in-out hover:scale-105 hover:bg-yellow-500 sm:ml-3 sm:w-auto"
 											onClick={async () => {
 												setOpen(false);
 												await requestStaking();
