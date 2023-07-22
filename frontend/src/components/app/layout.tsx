@@ -2,7 +2,7 @@ import { Dialog, Transition } from '@headlessui/react';
 import { Bars3Icon, LockClosedIcon } from '@heroicons/react/20/solid';
 import { XMarkIcon } from '@heroicons/react/24/outline';
 import { useRouter } from 'next/router';
-import { Fragment, useState } from 'react';
+import {Fragment, useEffect, useState} from 'react';
 
 import { useUserContext } from '../../contexts/userContext';
 

@@ -12,15 +12,6 @@ function MyApp({ Component, pageProps }: AppProps) {
 			<UserContextProvider>
 				<Component {...pageProps} />
 			</UserContextProvider>
-			<WalletConnectModalAuth
-				projectId={'5ddf79a8137abafd0b4ccdf917e34fbb'}
-				metadata={{
-					name: 'Ethglobal2',
-					description: 'Defi APP Eth global',
-					url: process.env.NEXT_PUBLIC_DOMAIN as string,
-					icons: [],
-				}}
-			/>
 		</>
 	);
 }

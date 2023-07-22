@@ -1,5 +1,7 @@
-import { Provider } from 'ethers';
-import { useEffect, useState } from 'react';
+import {ethers, Provider} from 'ethers'
+import Web3Modal from 'web3modal';
+import {useCallback, useEffect, useState} from 'react';
+import WalletConnectProvider from "@walletconnect/web3-provider";
 
 export interface UserClientInterface {
 	address: string | undefined;
@@ -29,6 +31,7 @@ const UseUserClient = () => {
 		const pkh = localStorage.getItem('accountPkh');
 		if (pkh) setAddress(pkh);
 	}, []);
+
 
 	return {
 		address,
