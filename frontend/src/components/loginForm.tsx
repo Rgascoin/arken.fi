@@ -1,113 +1,39 @@
 /* eslint-disable @typescript-eslint/no-shadow */
-import AuthClient, { generateNonce } from '@walletconnect/auth-client';
-import { Web3Modal } from '@web3modal/standalone';
-import { router } from 'next/client';
-import React, { useCallback, useEffect, useState } from 'react';
+
+import { useSignIn } from '@walletconnect/modal-auth-react';
+import { JsonRpcProvider } from 'ethers';
+import { useRouter } from 'next/router';
+import * as process from 'process';
+import React from 'react';
 
 import { useUserContext } from '../contexts/userContext';
 
-// 1. Get projectID at https://cloud.walletconnect.com
-const projectId = process.env.NEXT_PUBLIC_PROJECT_ID;
-if (!projectId) {
-	throw new Error('You need to provide NEXT_PUBLIC_PROJECT_ID env variable');
-}
-
-// 2. Configure web3Modal
-const web3Modal = new Web3Modal({
-	projectId,
-	walletConnectVersion: 2,
-});
-
 const LoginForm = () => {
+	const router = useRouter();
 	const userClient = useUserContext();
+	const { signIn, data, error } = useSignIn({
+		statement: 'Connect to my dapp',
+		aud: process.env.NEXT_PUBLIC_DOMAIN,
+	});
 
-	const [client, setClient] = useState<AuthClient | null>();
-	const [hasInitialized, setHasInitialized] = useState(false);
-	const [uri, setUri] = useState<string>('');
-	const [address, setAddress] = useState<string>('');
+	const onSignIn = async () => {
+		if (!userClient.setProvider || !userClient.setAddress) return;
+		const data = await signIn();
+		console.log(data);
 
-	const onSignIn = useCallback(() => {
-		if (!client) return;
-		client
-			.request({
-				aud: window.location.href,
-				domain: window.location.hostname.split('.').slice(-2).join('.'),
-				chainId: 'eip155:1',
-				type: 'eip4361',
-				nonce: generateNonce(),
-				statement: 'Sign in with wallet.',
-			})
-			.then(({ uri }) => {
-				if (uri) {
-					setUri(uri);
-				}
-			});
-	}, [client, setUri]);
+		if (!error) {
+			const provider = new JsonRpcProvider(
+				`https://rpc.walletconnect.com/v1/?chainId=eip155:1&projectId=${process.env.NEXT_PUBLIC_PROJECT_ID}`,
+			);
 
-	useEffect(() => {
-		AuthClient.init({
-			projectId: process.env.NEXT_PUBLIC_PROJECT_ID!,
-			metadata: {
-				name: 'react-dapp-auth',
-				description: 'React Example Dapp for Auth',
-				url: window.location.host,
-				icons: [],
-			},
-		})
-			.then((authClient) => {
-				setClient(authClient);
-				setHasInitialized(true);
-				console.log('inited');
-			})
-			.catch(console.error);
-	}, []);
+			const a = await provider.getSigner('0x9ec165cdfc50053c5836602eb1294141dbd5b7e6');
+			console.log(a);
 
-	useEffect(() => {
-		if (!client) return;
-		client.on('auth_response', ({ params }) => {
-			if ('code' in params) {
-				console.error(params);
-				return web3Modal.closeModal();
-			}
-			if ('error' in params) {
-				console.error(params.error);
-				if ('message' in params.error) {
-					console.error('custom:', params.error.message);
-				}
-				return web3Modal.closeModal();
-			}
-			console.log('custom:', 'auth successfull');
-			console.log('welcome:', params.result.p.iss.split(':')[4]);
-			setAddress(params.result.p.iss.split(':')[4]);
-		});
-	}, [client]);
-
-	useEffect(() => {
-		async function handleOpenModal() {
-			if (uri) {
-				await web3Modal.openModal({
-					uri,
-					standaloneChains: ['eip155:1'],
-				});
-			}
+			await userClient.setProvider(provider);
+			await userClient.setAddress(data.address);
+			await router.push('/app/userDashboard');
 		}
-		handleOpenModal();
-	}, [uri]);
-
-	// TODO: Trigger page redirection to main
-	useEffect(() => {
-		const trigger = async () => {
-			if (userClient?.login) await userClient.login(address);
-			router.push('/app/userDashboard');
-		};
-
-		if (address) {
-			web3Modal.closeModal();
-			trigger();
-		}
-
-		console.log(userClient.address);
-	}, [address, userClient]);
+	};
 
 	return (
 		<>
@@ -147,7 +73,6 @@ const LoginForm = () => {
 
 								<div className="mt-6 grid grid-cols-1 gap-4">
 									<button
-										disabled={!hasInitialized}
 										onClick={onSignIn}
 										className="flex w-full cursor-pointer items-center justify-center gap-3 rounded-md bg-blue-600 px-3 py-1.5 text-white transition-all duration-150 ease-in-out hover:scale-105 hover:bg-blue-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#24292F]"
 									>
@@ -162,7 +87,7 @@ const LoginForm = () => {
 					<img
 						className="absolute inset-0 h-full w-full object-cover"
 						src="https://images.unsplash.com/photo-1631603090989-93f9ef6f9d80?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format"
-						alt="img"
+						alt="Unsplay display"
 					/>
 				</div>
 			</div>

@@ -2,10 +2,6 @@ import React, { useState } from 'react';
 
 import { useUserContext } from '../../../contexts/userContext';
 
-function classNames(...classes: any) {
-	return classes.filter(Boolean).join(' ');
-}
-
 enum ActionState {
 	none = 'NONE',
 	deposit = 'DEPOSIT',
