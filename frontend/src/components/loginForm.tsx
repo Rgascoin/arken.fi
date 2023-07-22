@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-shadow */
 
 import { useSignIn } from '@walletconnect/modal-auth-react';
-import { JsonRpcProvider } from 'ethers';
+import { JsonRpcProvider, JsonRpcSigner } from 'ethers';
 import { useRouter } from 'next/router';
 import * as process from 'process';
 import React from 'react';
@@ -26,8 +26,7 @@ const LoginForm = () => {
 				`https://rpc.walletconnect.com/v1/?chainId=eip155:1&projectId=${process.env.NEXT_PUBLIC_PROJECT_ID}`,
 			);
 
-			const a = await provider.getSigner('0x9ec165cdfc50053c5836602eb1294141dbd5b7e6');
-			console.log(a);
+			// const signer = new JsonRpcSigner(provider, data.address);
 
 			await userClient.setProvider(provider);
 			await userClient.setAddress(data.address);
