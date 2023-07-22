@@ -92,8 +92,8 @@ const SidePanel = () => {
 										</label>
 										<div className="mt-2">
 											<input
-												type="text"
-												name="text"
+												type="number"
+												name="number"
 												id="dataForm"
 												value={dataForm}
 												onChange={(e: any) => {

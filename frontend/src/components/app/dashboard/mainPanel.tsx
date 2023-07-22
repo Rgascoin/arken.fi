@@ -9,7 +9,7 @@ const deployments = [
 		depositName: 'Deposit #1',
 		color: 'text-green-400 bg-green-400/10',
 		description: 'on StakerZ',
-		data: 'StakerZ',
+		data: '123.00 ETH',
 		dataColor: 'text-indigo-400 bg-indigo-400/10 ring-indigo-400/30',
 		stats: [
 			{ name: 'Vault Balance', value: '23,533.00', unit: 'eth' },
