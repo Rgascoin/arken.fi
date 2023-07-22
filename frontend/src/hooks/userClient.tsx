@@ -2,18 +2,23 @@ import { useEffect, useState } from 'react';
 
 export interface UserClientInterface {
 	address: string | undefined;
+	pickedDeposit: any;
+	setPickedDeposit: ((a: any) => Promise<void>) | undefined;
 	login: ((a: string) => Promise<boolean>) | undefined;
 	logout: (() => Promise<void>) | undefined;
 }
 
 const userInitialState: UserClientInterface = {
 	address: undefined,
+	pickedDeposit: undefined,
+	setPickedDeposit: undefined,
 	login: undefined,
 	logout: undefined,
 };
 
 const UseUserClient = () => {
 	const [address, setAddress] = useState<string | undefined>(undefined);
+	const [pickedDeposit, setPickedDeposit] = useState<any>(undefined);
 
 	// TODO: Fetch the user automatically at loading if possible
 	useEffect(() => {
@@ -39,6 +44,8 @@ const UseUserClient = () => {
 
 	return {
 		address,
+		pickedDeposit,
+		setPickedDeposit,
 		login,
 		logout,
 	} as UserClientInterface;
