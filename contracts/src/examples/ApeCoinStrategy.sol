@@ -37,6 +37,11 @@ contract ApeCoinStrategy is IStrategy, Owned {
     address public asset;
     address public vault;
 
+    modifier onlyVault {
+        if (msg.sender != vault) revert Errors.NotVault();
+        _;
+    }
+
     constructor(address initialOwner, address definitiveStaker, address definitiveAsset) Owned(initialOwner) {
         staker = definitiveStaker;
         asset = definitiveAsset;
@@ -55,19 +60,19 @@ contract ApeCoinStrategy is IStrategy, Owned {
         emit OwnerUpdated(oldVault, newVault);
     }
 
-    function beforeWithdraw(uint256 assets, uint256 /* shares */ ) external override {
+    function beforeWithdraw(uint256 assets, uint256 /* shares */ ) external override onlyVault {
         ApeStaking(staker).withdrawSelfApeCoin(assets);
     }
 
-    function afterDeposit(uint256 assets, uint256 /* shares */ ) external override {
+    function afterDeposit(uint256 assets, uint256 /* shares */ ) external override onlyVault {
         ApeStaking(staker).depositSelfApeCoin(assets);
     }
 
-    function harvest() external override {
+    function harvest() external override onlyVault {
         ApeStaking(staker).claimSelfApeCoin();
     }
 
-    function compound() external override {
+    function compound() external override onlyVault {
         ApeStaking(staker).depositSelfApeCoin(ERC20(asset).balanceOf(address(this)));
     }
 

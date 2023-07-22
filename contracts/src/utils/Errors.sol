@@ -13,4 +13,7 @@ library Errors {
 
     // Operator errors
     error NotOperatorNorOwner();
+
+    // Vault errors
+    error NotVault();
 }
