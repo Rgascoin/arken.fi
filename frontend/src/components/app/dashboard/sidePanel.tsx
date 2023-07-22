@@ -1,6 +1,10 @@
+import { JsonRpcApiProvider, JsonRpcSigner } from 'ethers';
 import React, { useState } from 'react';
 
 import { useUserContext } from '../../../contexts/userContext';
+import ierc20 from '../../../web3/abi/IErc.json';
+import vaultAbi from '../../../web3/abi/Vault.json';
+import getContract from '../../../web3/toolkit/getContract';
 
 enum ActionState {
 	none = 'NONE',
@@ -12,6 +16,35 @@ const SidePanel = () => {
 	const userContext = useUserContext();
 	const [dataForm, setDataForm] = useState<number>(0);
 	const [actionState, setActionState] = useState<ActionState>(ActionState.none);
+
+	const perfomUpdate = async () => {
+		if (!userContext.provider || !userContext.address) {
+			console.error("Can't get signer");
+			return;
+		}
+
+		const signer = new JsonRpcSigner(userContext.provider as unknown as JsonRpcApiProvider, userContext.address);
+		const vaultContract = getContract(userContext.pickedDeposit.vaultAddress, vaultAbi, signer);
+		if (!vaultContract) {
+			console.log("Can't fetch the vault contract");
+			return;
+		}
+
+		if (actionState === ActionState.deposit) {
+			const assetAddress = await vaultContract.asset();
+			const assetContract = getContract(assetAddress, ierc20, signer);
+			if (!assetContract) {
+				console.log("Can't fetch the erc20 contract");
+				return;
+			}
+			const rxc = await assetContract.approve(userContext.pickedDeposit.vaultAddress, dataForm);
+			await rxc.wait();
+			await vaultContract.deposit(dataForm, userContext.address, { gasLimit: 1000000 });
+		} else {
+			await vaultContract.withdraw(dataForm, userContext.address, userContext.address, { gasLimit: 1000000 });
+		}
+		setDataForm(0);
+	};
 
 	return (
 		<>
@@ -117,6 +150,9 @@ const SidePanel = () => {
 												Cancel
 											</button>
 											<button
+												onClick={async () => {
+													await perfomUpdate();
+												}}
 												className={
 													'text-md my-3 cursor-pointer rounded-xl border border-indigo-600 px-4 py-1 text-gray-200 transition-all duration-150 ease-in-out hover:scale-105 hover:border-indigo-700 hover:bg-indigo-600'
 												}

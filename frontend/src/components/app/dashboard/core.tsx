@@ -6,19 +6,33 @@ import React, { Fragment, useEffect, useRef, useState } from 'react';
 import MainPanel from './mainPanel';
 import SidePanel from './sidePanel';
 import VaultList from './vaultList';
+import getContract from "../../../web3/toolkit/getContract";
+import factoryAbi from "../../../web3/abi/Factory.json";
+import vaultAbi from '../../../web3/abi/Vault.json';
+import ierc20 from '../../../web3/abi/IErc.json';
+
+import {useUserContext} from "../../../contexts/userContext";
+import {JsonRpcApiProvider, JsonRpcSigner} from "ethers";
+
+const FactoryContractAddress = '0x9155497EAE31D432C0b13dBCc0615a37f55a2c87';
+
 
 type ModalFormData = {
 	vault: string;
+	receiver: string;
 	amount: number;
 };
 
 const Core = () => {
+	const userClient = useUserContext();
 	const router = useRouter();
 	const { focus } = router.query;
 	const [modalFormData, setModalFormData] = useState<ModalFormData>({
 		vault: '',
+		receiver: '',
 		amount: 0,
 	});
+	const [vaultsAddresses, setVaultsAddresses] = useState<string[] | undefined>(undefined)
 
 	const [open, setOpen] = useState(false);
 	const cancelButtonRef = useRef(null);
@@ -27,13 +41,71 @@ const Core = () => {
 		setModalFormData({ ...modalFormData, [e.target.name]: e.target.value });
 	};
 
-	const requestStaking = () => {
+	const requestStaking = async () => {
+		if (!userClient.provider || !userClient.address) {
+			console.error("Can't get signer")
+			return;
+		}
+
+		const signer = new JsonRpcSigner(userClient.provider as unknown as JsonRpcApiProvider, userClient.address)
+		console.log(modalFormData.vault)
+		const vaultContract = getContract(modalFormData.vault, vaultAbi, signer);
+		if (!vaultContract) {
+			console.log("Can't fetch the vault contract")
+			return;
+		}
+
+		const assetAddress = await vaultContract.asset();
+		const assetContract = getContract(assetAddress, ierc20, signer);
+		if (!assetContract) {
+			console.log("Can't fetch the erc20 contract")
+			return;
+		}
+
+		const rxc = await assetContract.approve(modalFormData.vault, modalFormData.amount)
+		await rxc.wait();
+
+		const strat = await vaultContract.strategy()
+		console.log('start:', strat);
+
+		console.log(modalFormData.amount, modalFormData.receiver)
+		await vaultContract.deposit(modalFormData.amount.toString(), modalFormData.receiver, {gasLimit: 1000000})
+
 		setModalFormData({
 			vault: '',
+			receiver: '',
 			amount: 0,
 		});
-		console.log(modalFormData);
 	};
+
+	// TODO: Cut duplicate
+	const fetchVaultList = async (): Promise<string[] | Promise<undefined>> => {
+		if (!userClient.provider || !userClient.address) {
+			console.error("Can't get signer")
+			return;
+		}
+
+		const signer = new JsonRpcSigner(userClient.provider as unknown as JsonRpcApiProvider, userClient.address)
+		const contract = getContract(FactoryContractAddress, factoryAbi, signer);
+		if (!contract) {
+			console.log("Can't fetch the contract")
+			return;
+		}
+
+		// Fetching data until the array is empty
+		const addresses = await contract.getVaults();
+		return addresses;
+	}
+
+	useEffect(() => {
+		const fetch = async () => {
+			const list = await fetchVaultList()
+			setVaultsAddresses(list);
+			if (list) setModalFormData({...modalFormData, vault: list[0] ,receiver: userClient.address as string});
+		}
+
+		if (userClient.provider && userClient.address) fetch();
+	}, [userClient.provider])
 
 	return (
 		<>
@@ -185,10 +257,30 @@ const Core = () => {
 													onChange={onChange}
 													className="mt-2 block w-full rounded-md border-0 bg-gray-600 py-1.5 pl-3 pr-10 text-gray-300 ring-1 ring-inset ring-gray-800 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6"
 												>
-													<option>Contractor</option>
-													<option>SupraDai</option>
-													<option>SuperDodo</option>
+													{
+														vaultsAddresses && vaultsAddresses.map( (address,index) =>
+															<option key={address}>{address}</option> )
+													}
 												</select>
+											</div>
+											<div className={'mt-2'}>
+												<label
+													htmlFor="amount"
+													className="block text-sm font-medium leading-6 text-gray-200"
+												>
+													Receiver
+												</label>
+												<div className="">
+													<input
+														type="text"
+														name="receiver"
+														value={modalFormData.receiver}
+														onChange={onChange}
+														className="block w-full rounded-md border-0 bg-gray-600 px-3 py-1.5 text-gray-300 shadow-sm ring-1 ring-inset ring-gray-700 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+														placeholder="0.00"
+														aria-describedby="form text input"
+													/>
+												</div>
 											</div>
 											<div className={'mt-2'}>
 												<label
@@ -214,9 +306,9 @@ const Core = () => {
 									<div className="bg-gray-800 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
 										<button
 											className="inline-flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm transition-all duration-150 ease-in-out hover:scale-105 hover:bg-indigo-500 sm:ml-3 sm:w-auto"
-											onClick={() => {
+											onClick={async () => {
 												setOpen(false);
-												requestStaking();
+												await requestStaking();
 											}}
 										>
 											Stake!
