@@ -24,6 +24,10 @@ const Core = () => {
 	};
 
 	const requestStaking = () => {
+		setModalFormData({
+			vault: '',
+			amount: 0,
+		});
 		console.log(modalFormData);
 	};
 
@@ -116,7 +120,7 @@ const Core = () => {
 												<select
 													id="vault"
 													name="vault"
-													value={modalFormData.vault} // Provide the value prop to make it a controlled component
+													value={modalFormData.vault}
 													onChange={onChange}
 													className="mt-2 block w-full rounded-md border-0 bg-gray-600 py-1.5 pl-3 pr-10 text-gray-300 ring-1 ring-inset ring-gray-800 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6"
 												>
@@ -136,7 +140,6 @@ const Core = () => {
 													<input
 														type="number"
 														name="amount"
-														id="amount"
 														value={modalFormData.amount}
 														onChange={onChange}
 														className="block w-full rounded-md border-0 bg-gray-600 px-3 py-1.5 text-gray-300 shadow-sm ring-1 ring-inset ring-gray-700 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
