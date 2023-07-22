@@ -4,10 +4,9 @@ deployMantle:
 	source .env; \
 	forge script script/Deploy.s.sol:DeployScript --rpc-url $${MANTLE_RPC_URL} --broadcast --legacy
 
-# TODO the deployment doesn't works yet
 deployNeon:
 	source .env; \
-	forge script script/Deploy.s.sol:DeployScript --gas-limit 100000000000 --rpc-url $${NEON_RPC_URL} --broadcast --legacy
+	forge script script/Deploy.s.sol:DeployScript -g 8000 --rpc-url $${NEON_RPC_URL} --broadcast --legacy
 
 deployGnosis:
 	source .env; \
