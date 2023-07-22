@@ -88,12 +88,16 @@ const SidePanel = () => {
 											className="block text-sm font-medium leading-6 text-gray-200"
 										>
 											{actionState === ActionState.deposit ? 'Deposit' : 'Withdraw'}
-											{'  '}amount
+											{'  '}amount{' '}
+											<span className={'cursor-pointer text-sm text-gray-400 hover:underline'}>
+												{' '}
+												- max
+											</span>
 										</label>
 										<div className="mt-2">
 											<input
 												type="number"
-												name="number"
+												name="dataForm"
 												id="dataForm"
 												value={dataForm}
 												onChange={(e: any) => {
