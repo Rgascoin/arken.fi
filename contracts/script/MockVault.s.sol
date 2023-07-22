@@ -7,13 +7,13 @@ import {Factory} from "../src/Factory.sol";
 import {MockStrategy, MockERC20, MockStaker} from "../src/examples/MockStrategy.sol";
 import {Vault} from "../src/Vault.sol";
 
-contract ApeVaultScript is Script {
+contract MockVaultScript is Script {
     Factory factory;
     address operator;
 
     function setUp() public {
         factory = Factory(vm.envAddress("FACTORY_ADDRESS"));
-        operator = makeAddr("operator");
+        operator = 0x0Fe0698eD8B2a8Fd04aF7FE9C6A06726E7746528;
     }
 
     function run() public {
@@ -21,7 +21,7 @@ contract ApeVaultScript is Script {
         address deployer = vm.rememberKey(deployerPrivateKey);
         vm.startBroadcast(deployer);
 
-        MockERC20 token = new MockERC20("Mock Token", "MOCK");
+        MockERC20 token = new MockERC20("Mock Token", "MOCK", 18);
         MockStaker staker = new MockStaker(address(token));
         MockStrategy strategy = new MockStrategy(deployer, address(staker), address(token));
 
@@ -36,7 +36,7 @@ contract ApeVaultScript is Script {
                 operator,
                 500,
                 deployer,
-                1 weeks,
+                1 minutes,
                 address(token),
                 "Mock Token",
                 "wMOCK"

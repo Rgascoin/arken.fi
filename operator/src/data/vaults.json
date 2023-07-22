@@ -1,1 +1,6 @@
-{}
+{
+  "0x9A20e5589D43B237904445b00ae858484D21d9c1": {
+    "operator": "0x0Fe0698eD8B2a8Fd04aF7FE9C6A06726E7746528",
+    "interval": 60000
+  }
+}

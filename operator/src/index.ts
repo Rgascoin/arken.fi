@@ -5,6 +5,7 @@ import factoryAbi from "./abi/Factory.json";
 import etherProvider from "./config/etherProvider";
 import express from "express";
 import fs from "fs";
+import { loadStoredVault } from "./utils/loadStoredVaults";
 
 function randomWallet(mnemonic: string, path: string): ethers.Wallet {
   return ethers.Wallet.fromMnemonic(mnemonic, path);
@@ -12,6 +13,8 @@ function randomWallet(mnemonic: string, path: string): ethers.Wallet {
 
 (async () => {
   let factoryAddress = config.factoryAddress();
+
+  await loadStoredVault();
 
   // Load the vaults from the factory
   const factory = new ethers.Contract(
@@ -23,7 +26,11 @@ function randomWallet(mnemonic: string, path: string): ethers.Wallet {
     "VaultCreated",
     async (owner: string, asset: string, vaultAddress: string) => {
       console.log("VaultCreated", owner, asset, vaultAddress);
-      await loadVault(owner, asset, vaultAddress);
+      try {
+        await loadVault(owner, asset, vaultAddress);
+      } catch (err) {
+        console.log(err);
+      }
     }
   );
 
