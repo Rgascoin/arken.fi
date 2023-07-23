@@ -27,6 +27,8 @@ The project has three main components:
 
 ## How to use
 
+![image](./.github/assets/architecture.png)
+
 ### Deploying a strategy
 
 To deploy a strategy, you need to implement the following interface:
