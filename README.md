@@ -1,4 +1,4 @@
-# <h1 align="center"> Arkan.fi </h1>
+# <h1 align="center"> Arken.fi </h1>
 
 <p align="center">
     <img src="./.github/assets/logo.png" style="border-radius:1%" alt="">
